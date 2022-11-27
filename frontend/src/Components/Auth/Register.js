@@ -1,68 +1,54 @@
+import { Link } from "react-router-dom";
+
+import FrontLayout from '../Layouts/Front/Default'
 const Register = () => {
     return (
         <>
-            <div role="main" className="main">
-                <section className="page-header page-header-modern bg-color-light-scale-1 page-header-lg">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-12 align-self-center p-static order-2 text-center">
-                                <h1 className="font-weight-bold text-dark">Registrarse</h1>
-                            </div>
-                            <div className="col-md-12 align-self-center order-1">
-                                <ul className="breadcrumb d-block text-center">
-                                    <li><a href="#">Home</a></li>
-                                    <li className="active">Registrarse</li>
-                                </ul>
-                            </div>
+            <FrontLayout>
+                <div className="center-sign">
+                    <a href="/" className="logo float-left">
+                        <img src={process.env.PUBLIC_URL + "/assets/admin/img/logo.png"} height={70} alt="Porto Admin" />
+                    </a>
+                    <div className="panel card-sign">
+                        <div className="card-title-sign mt-3 text-end">
+                            <h2 className="title text-uppercase font-weight-bold m-0"><i className="bx bx-user-circle me-1 text-6 position-relative top-5" /> Registrarse</h2>
                         </div>
-                    </div>
-                </section>
-                <div className="container py-4">
-                    <div className="row justify-content-center mt-5 mb-5">
-                        <div className="col-12 col-md-12 col-lg-12 mb-5 mb-lg-0 mb-5 card border-radius-2 bg-color-light border-2 p-3">
-                            <form method="POST" action="http://react-project.test/login">
-
-                                <div className="row">
-                                    <div className="form-group col-md-6 col-12">
-                                        <label htmlFor="first_name" className="col-md-12 col-form-label text-start">Nombre</label>
-                                        <div className="col-md-12">
-                                            <input id="first_name" type="first_name" className="form-control " name="first_name" required autoComplete="current-password" />
-                                        </div>
+                        <div className="card-body">
+                            <form action="index.html" method="post">
+                                <div className="form-group mb-3">
+                                    <label>email</label>
+                                    <div className="input-group">
+                                        <input name="email" type="email" className="form-control form-control-lg" />
+                                        <span className="input-group-text">
+                                            <i className="bx bx-user text-4" />
+                                        </span>
                                     </div>
-                                    <div className="form-group col-md-6 col-12">
-                                        <label htmlFor="last_name" className="col-md-12 col-form-label text-start">Apellidos</label>
-                                        <div className="col-md-12">
-                                            <input id="last_name" type="last_name" className="form-control " name="last_name" required autoComplete="current-password" />
-                                        </div>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <div className="clearfix">
+                                        <label className="float-left">Password</label>
+                                    </div>
+                                    <div className="input-group">
+                                        <input name="pwd" type="password" className="form-control form-control-lg" />
+                                        <span className="input-group-text">
+                                            <i className="bx bx-lock text-4" />
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="form-group col-md-6 col-12">
-                                        <label htmlFor="password" className="col-md-12 col-form-label text-start">Contraseña</label>
-                                        <div className="col-md-12">
-                                            <input id="password" type="password" className="form-control " name="password" required autoComplete="current-password" />
-                                        </div>
-                                    </div>
 
+                                    <div className="col-sm-12 text-end">
+                                        <button type="submit" className="btn btn-primary mt-2">Registrar</button>
+                                    </div>
                                 </div>
-                                <div className="row justify-content-between">
 
-                                    <div className="form-group col-md-auto">
-                                        <a className="text-decoration-none text-color-dark text-color-hover-primary font-weight-semibold text-2" href="http://react-project.test/password/reset">
-                                            ¿Ya estas registrado?</a>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="form-group col">
-                                        <button type="submit" className="btn btn-secondary btn-modern w-100 text-uppercase rounded-0 font-weight-bold text-3 py-3" data-loading-text="Loading...">  Login</button>
-                                    </div>
-                                </div>
+                                <p className="text-center">¿Ya tienes cuenta? <Link to='/'>Inicia Sessión!</Link></p>
                             </form>
                         </div>
                     </div>
+                    <p className="text-center text-muted mt-3 mb-3">© Copyright 2021. All Rights Reserved.</p>
                 </div>
-            </div>
-
+            </FrontLayout>
         </>
     );
 }

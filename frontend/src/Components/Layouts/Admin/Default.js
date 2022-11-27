@@ -1,13 +1,10 @@
 import React from 'react'
 import Aside from './Aside'
-import Footer from './Footer'
 import Header from './Header'
-import Main from './Main'
 
 
 
-const Default = () => {
-    process.env.layout = "admin"
+const Default = (props) => {
 
     return (
         <>
@@ -15,7 +12,7 @@ const Default = () => {
                 <Header />
                 <div className="inner-wrapper">
                     <Aside />
-                    <Main />
+                    {props.children}
                 </div>
             </section>
         </>

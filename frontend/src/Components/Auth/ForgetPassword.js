@@ -1,53 +1,44 @@
+import { Link } from "react-router-dom";
+
+import FrontLayout from '../Layouts/Front/Default'
 const ForgetPassword = () => {
     return (
         <>
-            <div role="main" className="main">
-                <section className="page-header page-header-modern bg-color-light-scale-1 page-header-lg">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-12 align-self-center p-static order-2 text-center">
-                                <h1 className="font-weight-bold text-dark">Olvidastes Contraseña</h1>
-                            </div>
-                            <div className="col-md-12 align-self-center order-1">
-                                <ul className="breadcrumb d-block text-center">
-                                    <li><a href="#">Home</a></li>
-                                    <li className="active">Olvidastes Contraseña</li>
-                                </ul>
-                            </div>
+            <FrontLayout>
+                <div className="center-sign">
+                    <a href="/" className="logo float-left">
+                        <img src={process.env.PUBLIC_URL + "/assets/admin/img/logo.png"} height={70} alt="Porto Admin" />
+                    </a>
+                    <div className="panel card-sign">
+                        <div className="card-title-sign mt-3 text-end">
+                            <h2 className="title text-uppercase font-weight-bold m-0"><i className="bx bx-user-circle me-1 text-6 position-relative top-5" />Recordar Contraseña</h2>
                         </div>
-                    </div>
-                </section>
-                <div className="container py-4">
-                    <div className="row justify-content-center mt-5 mb-5">
-                        <div className="col-12 col-md-12 col-lg-5 mb-5 mb-lg-0 mb-5 card border-radius-2 bg-color-light border-2 p-3">
-                            <form method="POST" action="http://react-project.test/login">
-                                <input type="hidden" name="_token" defaultValue="9ALmBWE0ZGc4CQh2Uvi13Wn0HI8eUiSjUAw0vXeM" />                <div className="row">
-                                    <div className="form-group col">
-                                        <label htmlFor="email" className="col-md-12 col-form-label text-start">Email</label>
-                                        <div className="col-md-12">
-                                            <input id="email" type="email" className="form-control " name="email" required autofocus />
-                                        </div>
+                        <div className="card-body">
+                            <form action="index.html" method="post">
+                                <div className="form-group mb-3">
+                                    <label>Email</label>
+                                    <div className="input-group">
+                                        <input name="usemailername" type="text" className="form-control form-control-lg" />
+                                        <span className="input-group-text">
+                                            <i className="bx bx-user text-4" />
+                                        </span>
                                     </div>
                                 </div>
 
-                                <div className="row justify-content-between">
-
-                                    <div className="form-group col-md-auto">
-                                        <a className="text-decoration-none text-color-dark text-color-hover-primary font-weight-semibold text-2" href="http://react-project.test/password/reset">
-                                            Recuerdas tu contraseña</a>
-                                    </div>
-                                </div>
                                 <div className="row">
-                                    <div className="form-group col">
-                                        <button type="submit" className="btn btn-secondary btn-modern w-100 text-uppercase rounded-0 font-weight-bold text-3 py-3" data-loading-text="Loading...">  Recuperar Contraseña</button>
+
+                                    <div className="col-sm-12 text-end">
+                                        <button type="submit" className="btn btn-primary mt-2">Enviar</button>
                                     </div>
                                 </div>
+
+                                <p className="text-center">¿Recuerdas tu contraseña? <Link to='/'>Inicia sessión!</Link></p>
                             </form>
                         </div>
                     </div>
+                    <p className="text-center text-muted mt-3 mb-3">© Copyright 2021. All Rights Reserved.</p>
                 </div>
-            </div>
-
+            </FrontLayout>
         </>
     );
 }

@@ -1,17 +1,11 @@
-import React from 'react'
-import Footer from './Footer';
-import Header from './Header';
-import Main from './Main';
+const Default = (props) => {
 
-
-
-const Default = () => {
-    localStorage.setItem('layout', 'Front');
     return (
         <>
-            <Header />
-            <Main />
-            <Footer />
+            <section className="body-sign">
+                {props.children}
+            </section>
+
         </>
     );
 }

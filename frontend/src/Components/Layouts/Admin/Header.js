@@ -7,7 +7,7 @@ const Header = () => {
             <header className="header">
                 <div className="logo-container">
                     <a href="../4.0.0" className="logo">
-                        <img src={process.env.PUBLIC_URL + "/assets/front/img/logo.png"} width={75} height={35} alt="Porto Admin" />
+                        <img src={process.env.PUBLIC_URL + "/assets/admin/img/logo.png"} width={75} height={35} alt="Porto Admin" />
                     </a>
                     <div className="d-md-none toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
                         <i className="fas fa-bars" aria-label="Toggle sidebar" />
@@ -18,7 +18,7 @@ const Header = () => {
                     <div id="userbox" className="userbox">
                         <a href="#" data-bs-toggle="dropdown">
                             <figure className="profile-picture">
-                                <img src={process.env.PUBLIC_URL + "/assets/front/img/!logged-user.jpg"} alt="Joseph Doe" className="rounded-circle" data-lock-picture="img/!logged-user.jpg" />
+                                <img src={process.env.PUBLIC_URL + "/assets/admin/img/!logged-user.jpg"} alt="Joseph Doe" className="rounded-circle" data-lock-picture="img/!logged-user.jpg" />
                             </figure>
                             <div className="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
                                 <span className="name">John Doe Junior</span>

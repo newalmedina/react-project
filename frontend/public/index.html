@@ -10,34 +10,89 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+   
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+    
     <title>React App</title>
+
+    <!-- Web Fonts  -->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+		<!-- Vendor CSS -->
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/animate/animate.compat.css">
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/font-awesome/css/all.min.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/boxicons/css/boxicons.min.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/magnific-popup/magnific-popup.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/jquery-ui/jquery-ui.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/jquery-ui/jquery-ui.theme.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/bootstrap-multiselect/css/bootstrap-multiselect.css" />
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/vendor/morris/morris.css" />
+
+		<!-- Theme CSS -->
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/css/theme.css" />
+
+		<!-- Skin CSS -->
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/css/skins/default.css" />
+
+		<!-- Theme Custom CSS -->
+		<link rel="stylesheet" href="%PUBLIC_URL%/assets/admin/css/custom.css">
+ 
+    <!-- Head Libs -->
+		<script src="%PUBLIC_URL%/assets/admin/vendor/modernizr/modernizr.js"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+   
+    <!-- Vendor -->
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery/jquery.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/popper/umd/popper.min.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/common/common.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/nanoscroller/nanoscroller.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/magnific-popup/jquery.magnific-popup.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery-placeholder/jquery.placeholder.js"></script>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+		<!-- Specific Page Vendor -->
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery-ui/jquery-ui.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqueryui-touch-punch/jquery.ui.touch-punch.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery-appear/jquery.appear.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/bootstrapv5-multiselect/js/bootstrap-multiselect.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery.easy-pie-chart/jquery.easypiechart.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/flot/jquery.flot.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/flot.tooltip/jquery.flot.tooltip.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/flot/jquery.flot.pie.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/flot/jquery.flot.categories.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/flot/jquery.flot.resize.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jquery-sparkline/jquery.sparkline.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/raphael/raphael.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/morris/morris.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/gauge/gauge.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/snap.svg/snap.svg.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/liquid-meter/liquid.meter.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/jquery.vmap.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/data/jquery.vmap.sampledata.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/jquery.vmap.world.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/continents/jquery.vmap.africa.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/continents/jquery.vmap.asia.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/continents/jquery.vmap.australia.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/continents/jquery.vmap.europe.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/continents/jquery.vmap.north-america.js"></script>
+		<script src="%PUBLIC_URL%/assets/admin/vendor/jqvmap/maps/continents/jquery.vmap.south-america.js"></script>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+		<!-- Theme Base, Components and Settings -->
+		<script src="%PUBLIC_URL%/assets/admin/js/theme.js"></script>
+
+		<!-- Theme Custom -->
+		<script src="%PUBLIC_URL%/assets/admin/js/custom.js"></script>
+
+		<!-- Theme Initialization Files -->
+		<script src="%PUBLIC_URL%/assets/admin/js/theme.init.js"></script>
+
+
   </body>
 </html>
