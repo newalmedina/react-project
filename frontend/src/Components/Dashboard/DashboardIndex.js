@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+
+import { useNavigate } from 'react-router-dom';
 
 import MainHeader from "../Layouts/Admin/MainHeader";
 import AdminLayout from '../Layouts/Admin/Default'
+import { UserContext } from "../../Context"
 
 const DashboardIndex = () => {
+    const { autenticatedUser } = useContext(UserContext)
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!autenticatedUser.id) {
+            navigate("/");
+        }
+    }, [autenticatedUser]);
+
     return (
         <>
             <AdminLayout>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\StoragePathWork;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -47,9 +49,15 @@ class AuthController extends Controller
             ], 401);
 
         $user = $request->user();
+
+        if (!$user->active) {
+            return response()->json([
+                'message' => 'Inactive user'
+            ], 403);
+        }
+
         return response()->json([
-            'access_token' =>  $user->createToken("API TOKEN")->plainTextToken,
-            'token_type' => 'Bearer',
+            'access_token' =>  'Bearer ' . $user->createToken("API TOKEN")->plainTextToken
         ]);
     }
 
@@ -70,6 +78,35 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        $myServiceSPW = new StoragePathWork("users");
+
+        $user = $request->user();
+
+        $roles = [];
+
+        foreach ($user->roles as $role) {
+            $roles[] = $role->display_name;
+        }
+
+        $photo = $myServiceSPW->getFile($user->userProfile->photo, '/users') ? urldecode($myServiceSPW->getFile($user->userProfile->photo, '/users')) : null;
+
+        if (App::environment('local') && $photo) {
+            $photo = "http://127.0.0.1:8887/" . $user->userProfile->photo;
+        }
+
+        return response()->json(
+            [
+                "id" => $user->id,
+                "full_name" => $user->userProfile->fullName,
+                "email" => $user->email,
+                "email_verified_at" => $user->email_verified_at,
+                "active" => $user->active,
+                "role" => implode(", ",  $roles),
+                "photo" => $photo,
+                "created_at" => Carbon::parse($user->created_at)->format("d/m/Y"),
+                // "updated_at" => "2022-12-04T07:33:11.000000Z"
+            ]
+
+        );
     }
 }
