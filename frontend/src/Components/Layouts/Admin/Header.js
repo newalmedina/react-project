@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from "../../../Context"
+import normalizeUrl from 'normalize-url'
 
 const Header = () => {
+    const { autenticatedUser } = useContext(UserContext)
     return (
         <>
             {/* start: header */}
@@ -18,11 +21,15 @@ const Header = () => {
                     <div id="userbox" className="userbox">
                         <a href="#" data-bs-toggle="dropdown">
                             <figure className="profile-picture">
-                                <img src={process.env.PUBLIC_URL + "/assets/admin/img/!logged-user.jpg"} alt="Joseph Doe" className="rounded-circle" data-lock-picture="img/!logged-user.jpg" />
+                                <img src={autenticatedUser.photo} alt="Joseph Doe" className="rounded-circle" data-lock-picture="img/!logged-user.jpg" />
                             </figure>
-                            <div className="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-                                <span className="name">John Doe Junior</span>
-                                <span className="role">Administrator</span>
+                            <div className="profile-info " data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
+                                <span className="name">{autenticatedUser.full_name}</span>
+                                <span className="role">
+                                    {autenticatedUser.role}
+                                    <br />
+                                    <small>( Miembro desde: {autenticatedUser.created_at})</small>
+                                </span>
                             </div>
                             <i className="fa custom-caret" />
                         </a>
