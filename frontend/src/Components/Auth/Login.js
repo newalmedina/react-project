@@ -1,37 +1,36 @@
 import React, { useState, useEffect, useContext } from 'react'
-import axios from "axios";
+import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom';
 
 import FrontLayout from '../Layouts/Front/Default'
 import { UserContext } from "../../Context"
-
+import { useForm } from "react-hook-form"
 const Login = (props) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
     const navigate = useNavigate();
 
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
 
     var apiUrl = localStorage.getItem("apiurl")
+    const is_autenticated = localStorage.getItem("is_autenticated")
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("")
     const [error, setError] = useState("");
     const [errorColor, setErrorColor] = useState("");
 
     useEffect(() => {
 
-        if (autenticatedUser.id) {
+        console.log(autenticatedUser)
+        if (is_autenticated) {
             navigate("/admin");
         }
     }, [autenticatedUser]);
 
-    const submitForm = async e => {
-        e.preventDefault()
-        let data =
-        {
-            email: email,
-            password: password
-        }
+    const submitForm = async (data) => {
 
         setError("")
         setErrorColor("")
@@ -79,6 +78,18 @@ const Login = (props) => {
         }
     }
 
+    const validateOptions = {
+        email: {
+            required: "Email obligatorio",
+            pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Email  invalido"
+            }
+        },
+        password: { required: "Contraseña obligatoria" }
+    }
+
+
     return (
         <>
             {!autenticatedUser.id &&
@@ -92,7 +103,7 @@ const Login = (props) => {
                                 <h2 className="title text-uppercase font-weight-bold m-0"><i className="bx bx-user-circle me-1 text-6 position-relative top-5" /> Iniciar Sessión</h2>
                             </div>
                             <div className="card-body">
-                                <form onSubmit={submitForm}>
+                                <form onSubmit={handleSubmit(submitForm)}>
                                     {
                                         error &&
                                         <div className={errorColor}>
@@ -103,14 +114,17 @@ const Login = (props) => {
                                         <label>email</label>
                                         <div className="input-group">
                                             <input name="email"
-                                                type="email"
+                                                type="text"
                                                 className="form-control form-control-lg"
-                                                value={email}
-                                                onChange={e => setEmail(e.target.value)} />
+                                                {...register('email', validateOptions.email)}
+                                            />
                                             <span className="input-group-text">
                                                 <i className="bx bx-user text-4" />
                                             </span>
                                         </div>
+                                        {errors.email && (
+                                            <small className="text-danger">{errors.email.message}</small>
+                                        )}
                                     </div>
                                     <div className="form-group mb-3">
                                         <div className="clearfix">
@@ -121,12 +135,15 @@ const Login = (props) => {
                                             <input name="password"
                                                 type="password"
                                                 className="form-control form-control-lg"
-                                                value={password}
-                                                onChange={e => setPassword(e.target.value)} />
+                                                {...register('password', validateOptions.password)}
+                                            />
                                             <span className="input-group-text">
                                                 <i className="bx bx-lock text-4" />
                                             </span>
                                         </div>
+                                        {errors.password && (
+                                            <small className="text-danger">{errors.password.message}</small>
+                                        )}
                                     </div>
                                     <div className="row">
 

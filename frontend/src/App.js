@@ -8,7 +8,6 @@ function App() {
   localStorage.setItem("apiurl", "http://react-project.test/api/")
 
   const [autenticatedUser, setAutenticatedUser] = useState([])
-  const is_autenticated = localStorage.getItem("is_autenticated")
 
 
 
@@ -37,15 +36,10 @@ function App() {
   }
 
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      setAutenticatedUser({ id: "id" })
-    }
 
-    if (is_autenticated) {
-      IsAutenticated(localStorage.getItem("token"));
-      console.log(localStorage.getItem("token"));
-    }
-  }, [is_autenticated]);
+    IsAutenticated(localStorage.getItem("token"));
+
+  }, []);
 
   return (
     <>

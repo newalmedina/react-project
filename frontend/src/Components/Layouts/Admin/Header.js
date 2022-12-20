@@ -1,9 +1,39 @@
 import React, { useContext } from 'react'
 import { UserContext } from "../../../Context"
-import normalizeUrl from 'normalize-url'
+
+import { useNavigate } from 'react-router-dom';
+
+import axios from "axios"
 
 const Header = () => {
+
     const { autenticatedUser } = useContext(UserContext)
+    const logOuth = () => {
+
+        var apiUrl = localStorage.getItem("apiurl")
+        var token = localStorage.getItem("token")
+
+        const config = {
+            headers:
+            {
+                Authorization: `${token}`,
+                Accept: 'application/json',
+            }
+        }
+
+        if (token) {
+            axios.get(apiUrl + 'auth/logout', config)
+                .then((response) => {
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("is_autenticated")
+                    window.location.reload(false)
+                }).catch((error) => {
+                    console.log(error)
+                    return false
+                });
+        }
+    }
+
     return (
         <>
             {/* start: header */}
@@ -43,7 +73,7 @@ const Header = () => {
                                     <a role="menuitem" tabIndex={-1} href="#" data-lock-screen="true"><i className="bx bx-lock" /> Lock Screen</a>
                                 </li>
                                 <li>
-                                    <a role="menuitem" tabIndex={-1} href="pages-signin.html"><i className="bx bx-power-off" /> Logout</a>
+                                    <a role="menuitem" tabIndex={-1} href="#" onClick={logOuth}><i className="bx bx-power-off" /> Logout</a>
                                 </li>
                             </ul>
                         </div>

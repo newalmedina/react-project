@@ -24,7 +24,7 @@ Route::group([
     'prefix' => 'auth'
 ], function () {
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('signup', [AuthController::class, 'singUp']);
+    Route::post('signup', [AuthController::class, 'signUp']);
 
     Route::group([
         'middleware' => 'auth:sanctum'

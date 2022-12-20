@@ -46,6 +46,7 @@ class FrontRegisterUserController extends Controller
 
             // Guardamos el usuario
             $user->push();
+
             if ($user->id) {
                 $userProfile = new UserProfile();
 
