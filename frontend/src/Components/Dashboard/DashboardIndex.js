@@ -20,12 +20,12 @@ const DashboardIndex = () => {
 
     return (
         <>
-            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-userss') &&
+            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users') &&
                 <div className='text-center pt-5'>
                     <h1>403 Forbidden</h1>
                 </div>
             }
-            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-userss') &&
+            {autenticatedUser.id &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader />

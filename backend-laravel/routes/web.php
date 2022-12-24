@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminUserProfileController;
 use App\Http\Controllers\Auth\FrontRegisterUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,4 +71,10 @@ Route::group(array('prefix' => 'admin', 'middleware' => ['auth', 'verified']), f
 
     Route::get('/users/roles/{id}', [AdminUserController::class, 'editRoles'])->name('admin.users.editRoles');
     Route::patch('/users/roles/{id}', [AdminUserController::class, 'updateRoles'])->name('admin.users.updateRoles');
+});
+
+//testing
+Route::get('prueba', function () {
+    $reciever = User::find(1);
+    return view('mails.forget_password', compact("reciever"));
 });

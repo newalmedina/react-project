@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ForgetPasswordMail;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserProfile;
@@ -13,8 +14,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -150,5 +154,93 @@ class AuthController extends Controller
             ]
 
         );
+    }
+
+
+    //forgetPassword
+    public function forgetPassword(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'validation error'
+            ], 422);
+        }
+        DB::beginTransaction();
+        try {
+
+            $user = User::where("email", $request->email)->first();
+            if (empty($user)) {
+                return response()->json([
+                    'message' => 'Este correo no existe en nuestros registros'
+                ], 404);
+            }
+
+            if (empty($user->forget_password_token)) {
+                $user->forget_password_token = Str::uuid()->toString();
+                $user->save();
+            }
+
+            Mail::to($user->email)
+
+                ->send(new ForgetPasswordMail($user));
+
+            DB::commit();
+            return response()->json([
+                'message' =>  'Se ha enviado un mail al correo'
+            ]);
+        } catch (Exception  $ex) {
+            DB::rollBack();
+            return $ex->getCode();
+        }
+    }
+
+    public function getForgetPasswordToken($user_id, $token)
+    {
+        $user = User::where("id", $user_id)
+            ->where("forget_password_token", $token)
+            ->first();
+
+        if (empty($user)) {
+            return response()->json([
+                'message' => 'Este correo no existe en nuestros registros'
+            ], 404);
+        }
+
+        return response()->json(
+            [
+                "token" => $user->forget_password_token,
+            ]
+        );
+    }
+
+    //restorePassword
+    public function restorePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'forget_password_token' => 'required|string',
+            'password' => 'required|confirmed|min:6|string'
+        ]);
+        $user = User::where("id", $request->user_id)
+            ->where("forget_password_token", $request->token)
+            ->first();
+
+        if (empty($user)) {
+            return response()->json([
+                'message' => 'Este correo no existe en nuestros registros'
+            ], 404);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->forget_password_token = null;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Contraseña Actualizada Correctamente'
+        ], 200);
     }
 }

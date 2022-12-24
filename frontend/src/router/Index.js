@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "../components/Auth/Login"
 import Register from "../components/Auth/Register"
+import ResetPassword from "../components/Auth/ResetPassword"
 import ForgetPassword from "../components/Auth/ForgetPassword"
 import Dashboard from "../components/Dashboard/DashboardIndex"
 
@@ -17,6 +18,7 @@ export default () => {
                 <Route path="/" element={<Login />} exact />
                 <Route path="/register" element={<Register />} exact />
                 <Route path="/forget-password" element={<ForgetPassword />} exact />
+                <Route path="/reset-password/:user_id/:token" element={<ResetPassword />} exact />
 
                 {/* Rutas Administración con autenticación */}
                 <Route path="/admin" element={<Dashboard />} />
