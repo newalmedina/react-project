@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import MainHeader from "../Layouts/Admin/MainHeader";
 import AdminLayout from '../Layouts/Admin/Default'
 import { UserContext } from "../../Context"
+import Error403 from '../ErrorPages/Error403';
 
 const DashboardIndex = () => {
     const is_autenticated = localStorage.getItem("is_autenticated")
@@ -20,12 +21,10 @@ const DashboardIndex = () => {
 
     return (
         <>
-            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users') &&
-                <div className='text-center pt-5'>
-                    <h1>403 Forbidden</h1>
-                </div>
+            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-dashboard') &&
+                <Error403 />
             }
-            {autenticatedUser.id &&
+            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-dashboard') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader />

@@ -51,7 +51,8 @@ const Header = () => {
                     <div id="userbox" className="userbox">
                         <a href="#" data-bs-toggle="dropdown">
                             <figure className="profile-picture">
-                                <img src={autenticatedUser.photo} alt="Joseph Doe" className="rounded-circle" data-lock-picture="img/!logged-user.jpg" />
+                                {autenticatedUser.photo}
+                                <img src={autenticatedUser.photo ? autenticatedUser.photo : process.env.PUBLIC_URL + "/assets/admin/img/logo.png"} alt="Joseph Doe" className="rounded-circle" />
                             </figure>
                             <div className="profile-info " data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
                                 <span className="name">{autenticatedUser.full_name}</span>
