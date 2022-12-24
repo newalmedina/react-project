@@ -23,6 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'active',
+        'email_verified_at',
     ];
 
     /**
@@ -60,5 +62,17 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return "";
+    }
+    public function getAllPermissionsAttribute()
+    {
+        return $this->allPermissions();
+    }
+    public function getAllPermissionsArrayAttribute()
+    {
+        $data = [];
+        foreach ($this->allPermissions() as $permission) {
+            $data[] = $permission->name;
+        }
+        return $data;
     }
 }

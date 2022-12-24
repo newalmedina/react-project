@@ -23,8 +23,11 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'auth'
 ], function () {
+    Route::get('get-forget-password-token/{user_id}/{token}', [AuthController::class, 'getForgetPasswordToken']);
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('signup', [AuthController::class, 'singUp']);
+    Route::post('signup', [AuthController::class, 'signUp']);
+    Route::post('forget-password', [AuthController::class, 'forgetPassword']);
+    Route::post('restore-password', [AuthController::class, 'restorePassword']);
 
     Route::group([
         'middleware' => 'auth:sanctum'

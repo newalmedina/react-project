@@ -1,4 +1,9 @@
+import React, { useContext } from 'react'
+import { UserContext } from "../../../Context"
+
 const Aside = () => {
+
+    const { autenticatedUser } = useContext(UserContext)
     return (
         <>
             {/* start: sidebar */}
@@ -21,6 +26,23 @@ const Aside = () => {
                                         <span>Dashboard</span>
                                     </a>
                                 </li>
+                                {autenticatedUser.permissions.includes('admin-users') &&
+                                    <li li className="nav-expanded">
+                                        <a className="nav-link" href="layouts-default.html">
+                                            <i className="fas fa-user" aria-hidden="true"></i>
+                                            <span>Usuarios</span>
+                                        </a>
+                                    </li>
+                                }
+                                {autenticatedUser.permissions.includes('admin-categories') &&
+                                    <li li className="nav-expanded">
+                                        <a className="nav-link" href="layouts-default.html">
+                                            <i className="fas fa-list" aria-hidden="true"></i>
+                                            <span>Categorias</span>
+                                        </a>
+                                    </li>
+                                }
+
                             </ul>
                         </nav>
                     </div>
