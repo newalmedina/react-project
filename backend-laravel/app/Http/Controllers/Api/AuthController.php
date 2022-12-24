@@ -133,10 +133,13 @@ class AuthController extends Controller
             $roles[] = $role->display_name;
         }
 
-        $photo = $myServiceSPW->getFile($user->userProfile->photo, '/users') ? urldecode($myServiceSPW->getFile($user->userProfile->photo, '/users')) : null;
 
-        if (App::environment('local') && $photo) {
-            $photo = "http://127.0.0.1:8887/users/" . $user->userProfile->photo;
+        $photo = null;
+        if (!empty($user->userProfile->photo)) {
+            $photo = $myServiceSPW->getFile($user->userProfile->photo, '/users') ? urldecode($myServiceSPW->getFile($user->userProfile->photo, '/users')) : null;
+            if (App::environment('local')) {
+                $photo = "http://127.0.0.1:8887/users/" . $user->userProfile->photo;
+            }
         }
 
         return response()->json(
