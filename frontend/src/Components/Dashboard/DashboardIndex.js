@@ -27,7 +27,9 @@ const DashboardIndex = () => {
             {autenticatedUser.id && autenticatedUser.permissions.includes('admin-dashboard') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
-                        <MainHeader />
+                        <MainHeader >
+                            Dashboard
+                        </MainHeader>
                         {/* start: page */}
 
                         <div className="row">

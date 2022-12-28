@@ -26,6 +26,13 @@ class UserProfile extends Model
     {
         return trim(ucfirst($this->attributes['first_name']) . " " . ucfirst($this->attributes['last_name']));
     }
+    public function getInitialNamesAttribute()
+    {
+        $name = !empty($this->attributes['first_name']) ? substr($this->attributes['first_name'], 0, 1) : null;
+        $last_name = !empty($this->attributes['last_name']) ? substr($this->attributes['last_name'], 0, 1) : null;
+
+        return trim(strtoupper($name . $last_name));
+    }
 
     public function getBirthdateFormattedAttribute()
     {

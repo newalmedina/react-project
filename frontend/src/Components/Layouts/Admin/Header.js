@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import { UserContext } from "../../../Context"
 
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 import axios from "axios"
 
@@ -49,10 +50,13 @@ const Header = () => {
                 {/* start: search & user box */}
                 <div className="header-right">
                     <div id="userbox" className="userbox">
-                        <a href="#" data-bs-toggle="dropdown">
+                        <a href="" data-bs-toggle="dropdown">
                             <figure className="profile-picture">
-                                {autenticatedUser.photo}
-                                <img src={autenticatedUser.photo ? autenticatedUser.photo : process.env.PUBLIC_URL + "/assets/admin/img/logo.png"} alt="Joseph Doe" className="rounded-circle" />
+                                {autenticatedUser.photo ?
+                                    <img src={autenticatedUser.photo} alt="Joseph Doe" className="rounded-circle" />
+                                    :
+                                    <span className="profile-picture profile-picture-as-text">{autenticatedUser.initial_names}</span>
+                                }
                             </figure>
                             <div className="profile-info " data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
                                 <span className="name">{autenticatedUser.full_name}</span>
@@ -68,7 +72,7 @@ const Header = () => {
                             <ul className="list-unstyled mb-2">
                                 <li className="divider" />
                                 <li>
-                                    <a role="menuitem" tabIndex={-1} href="pages-user-profile.html"><i className="bx bx-user-circle" /> My Profile</a>
+                                    <Link to='/admin/profile'><i className="bx bx-user-circle" /> My Profile</Link>
                                 </li>
                                 <li>
                                     <a role="menuitem" tabIndex={-1} href="#" data-lock-screen="true"><i className="bx bx-lock" /> Lock Screen</a>

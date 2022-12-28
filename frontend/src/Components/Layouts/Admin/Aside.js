@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import { UserContext } from "../../../Context"
 
+import { Link, } from 'react-router-dom';
+
 const Aside = () => {
 
     const { autenticatedUser } = useContext(UserContext)
@@ -20,14 +22,16 @@ const Aside = () => {
                     <div className="nano-content">
                         <nav id="menu" className="nav-main" role="navigation">
                             <ul className="nav nav-main">
-                                <li className="nav-expanded nav-active">
-                                    <a className="nav-link" href="layouts-default.html">
-                                        <i className="bx bx-home-alt" aria-hidden="true" />
-                                        <span>Dashboard</span>
-                                    </a>
-                                </li>
+                                {autenticatedUser.permissions.includes('admin-dashboard') &&
+                                    <li className="nav-expanded">
+                                        <Link to='/admin' className="nav-link">
+                                            <i className="bx bx-home-alt" aria-hidden="true" />
+                                            <span>Dashboard</span>
+                                        </Link>
+                                    </li>
+                                }
                                 {autenticatedUser.permissions.includes('admin-users') &&
-                                    <li li className="nav-expanded">
+                                    <li className="nav-expanded">
                                         <a className="nav-link" href="layouts-default.html">
                                             <i className="fas fa-user" aria-hidden="true"></i>
                                             <span>Usuarios</span>
@@ -35,7 +39,7 @@ const Aside = () => {
                                     </li>
                                 }
                                 {autenticatedUser.permissions.includes('admin-categories') &&
-                                    <li li className="nav-expanded">
+                                    <li className="nav-expanded">
                                         <a className="nav-link" href="layouts-default.html">
                                             <i className="fas fa-list" aria-hidden="true"></i>
                                             <span>Categorias</span>
