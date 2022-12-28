@@ -6,6 +6,7 @@ import Register from "../components/Auth/Register"
 import ResetPassword from "../components/Auth/ResetPassword"
 import ForgetPassword from "../components/Auth/ForgetPassword"
 import Dashboard from "../components/Dashboard/DashboardIndex"
+import Profile from '../components/Profile/profile';
 
 export default () => {
 
@@ -22,6 +23,7 @@ export default () => {
 
                 {/* Rutas Administración con autenticación */}
                 <Route path="/admin" element={<Dashboard />} />
+                <Route path="/admin/profile" element={<Profile />} />
             </Routes>
         </BrowserRouter>
     )

@@ -36,9 +36,7 @@ function App() {
   }
 
   useEffect(() => {
-
     IsAutenticated(localStorage.getItem("token"));
-    console.log(autenticatedUser)
   }, []);
 
   return (
