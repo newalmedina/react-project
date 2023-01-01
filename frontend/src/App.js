@@ -8,21 +8,21 @@ function App() {
   localStorage.setItem("apiurl", "http://react-project.test/api/")
 
   const [autenticatedUser, setAutenticatedUser] = useState([])
+  const token = localStorage.getItem("token")
+  const apiUrl = localStorage.getItem("apiurl")
 
 
 
-  const IsAutenticated = (token = null) => {
-    var apiUrl = localStorage.getItem("apiurl")
-
-    const config = {
-      headers:
-      {
-        Authorization: `${token}`,
-        Accept: 'application/json',
-      }
-    }
-
+  const IsAutenticated = () => {
     if (token) {
+      const config = {
+        headers:
+        {
+          Authorization: `${token}`,
+          Accept: 'application/json',
+        }
+      }
+
       axios.get(apiUrl + 'auth/user', config)
         .then((response) => {
 
@@ -36,7 +36,7 @@ function App() {
   }
 
   useEffect(() => {
-    IsAutenticated(localStorage.getItem("token"));
+    IsAutenticated();
   }, []);
 
   return (

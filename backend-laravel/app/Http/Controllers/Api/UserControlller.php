@@ -104,7 +104,6 @@ class UserControlller extends Controller
                 "first_name" => $user->userProfile->first_name,
                 "last_name" => $user->userProfile->last_name,
                 "email" => $user->email,
-
                 // "updated_at" => "2022-12-04T07:33:11.000000Z"
             ]
         );

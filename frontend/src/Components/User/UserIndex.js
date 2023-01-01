@@ -9,6 +9,8 @@ import { UserContext } from "../../Context"
 import Error403 from '../ErrorPages/Error403'
 
 import { DataGrid, GridRowParams, GridColDef, GridValueGetterParams, GridRowHeightParams } from '@mui/x-data-grid';
+import Success from '../Includes/Success'
+import Error from '../Includes/Error'
 
 const UserIndex = () => {
     const navigate = useNavigate()
@@ -177,8 +179,10 @@ const UserIndex = () => {
             axios.get(apiUrl + 'users', config)
                 .then((response) => {
                     setData(response.data)
+                    Success("Registro Eliminado Correctamente")
                 }).catch((error) => {
                     console.log(error)
+                    Error('Ha ocurrido un error')
                     return false
                 })
         }

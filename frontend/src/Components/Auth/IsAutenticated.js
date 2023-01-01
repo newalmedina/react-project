@@ -1,36 +1,34 @@
-import { useContext } from 'react'
+import React, { useState, useEffect, useContext } from "react"
 
 import axios from "axios"
-
-
 import { UserContext } from "../../Context"
 
-const IsAutenticated = (token = null) => {
-    var apiUrl = localStorage.getItem("apiurl")
+const IsAutenticated = () => {
+    const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
+    //const { autenticatedUser, setAutenticatedUser } = useState([])
 
-
-    const { setAutenticatedUser } = useContext(UserContext)
-
-    const config = {
-        headers:
-        {
-            Authorization: `${token}`,
-            Accept: 'application/json',
-        }
-    }
+    const apiUrl = localStorage.getItem("apiurl")
+    const token = localStorage.getItem("token")
 
     if (token) {
+        const config = {
+            headers:
+            {
+                Authorization: `${token}`,
+                Accept: 'application/json',
+            }
+        }
+
         axios.get(apiUrl + 'auth/user', config)
             .then((response) => {
-
-                console.log(response)
                 setAutenticatedUser(response.data)
-                return true
             }).catch((error) => {
                 console.log(error)
-                return false
             });
+    } else {
+        setAutenticatedUser([])
     }
+    return autenticatedUser
 }
 
 export default IsAutenticated;
