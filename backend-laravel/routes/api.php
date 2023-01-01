@@ -45,7 +45,6 @@ Route::group([
 ], function () {
     Route::get('get-user-profile', [UserProfileController::class, 'getUser']);
     Route::patch('user-profile-update/{id}', [UserProfileController::class, 'update']);
-    Route::patch('user-profile-update/{id}', [UserProfileController::class, 'update']);
 
     Route::get('users/change-state/{id}', [UserControlller::class, 'changeState']);
     Route::apiResource('users', UserControlller::class);

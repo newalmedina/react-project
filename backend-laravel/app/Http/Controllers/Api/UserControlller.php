@@ -9,9 +9,11 @@ use App\Services\StoragePathWork;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class UserControlller extends Controller
 {
@@ -25,11 +27,21 @@ class UserControlller extends Controller
         $users = User::all();
         $data = [];
         foreach ($users as $user) {
+            $photo = null;
+            if (!empty($user->userProfile->photo)) {
+                $myServiceSPW = new StoragePathWork("users");
+                $photo = $myServiceSPW->getFile($user->userProfile->photo, '/users') ? urldecode($myServiceSPW->getFile($user->userProfile->photo, '/users')) : null;
+                if (App::environment('local')) {
+                    $photo = "http://127.0.0.1:8887/users/" . $user->userProfile->photo;
+                }
+            }
             $data[] = [
                 "id" => $user->id,
                 "full_name" => $user->userProfile->fullName,
                 "email" => $user->email,
                 "active" => $user->active,
+                "photo" => $photo,
+                "initial_names" => $user->userProfile->initialNames,
             ];
         }
         return $data;
@@ -47,7 +59,7 @@ class UserControlller extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|confirmed|min:6|string'
+            'password' => 'nullable|confirmed|min:6|string'
         ]);
 
         if ($validator->fails()) {
@@ -60,7 +72,12 @@ class UserControlller extends Controller
             //creando user
             $user = new User();
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+            if (!empty($request->password)) {
+                $user->password = Hash::make($request->password);
+            } else {
+                $password = Str::random(10);
+                   $user->password = Hash::make($password);
+            }
             $user->active = 1;
             $user->email_verified_at = Carbon::now();
             $user->save();
@@ -74,10 +91,10 @@ class UserControlller extends Controller
             $userProfile->user_lang = 'es';
 
             $user->userProfile()->save($userProfile);
-
-            return response()->json([
+            return $user;
+            /* return response()->json([
                 'message' => 'Registro actualizado correctamente'
-            ], 200);
+            ], 200);*/
         } catch (Exception  $ex) {
             return $ex->getCode();
         }
@@ -97,6 +114,11 @@ class UserControlller extends Controller
                 'message' => 'Este correo no existe en nuestros registros'
             ], 404);
         }
+        $roles = [];
+
+        foreach ($user->roles as $role) {
+            $roles[] = $role->display_name;
+        }
 
         return response()->json(
             [
@@ -104,6 +126,9 @@ class UserControlller extends Controller
                 "first_name" => $user->userProfile->first_name,
                 "last_name" => $user->userProfile->last_name,
                 "email" => $user->email,
+                "role" => implode(", ",  $roles),
+                "created_at" => Carbon::parse($user->created_at)->format("d/m/Y"),
+
                 // "updated_at" => "2022-12-04T07:33:11.000000Z"
             ]
         );

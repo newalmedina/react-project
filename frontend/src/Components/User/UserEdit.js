@@ -44,7 +44,7 @@ const UserEdit = () => {
 
 
     const getUser = async () => {
-        if (token) {
+        if (token && user_id) {
             const config = {
                 headers:
                 {
@@ -62,7 +62,9 @@ const UserEdit = () => {
                             first_name: response.data.first_name,
                             last_name: response.data.last_name,
                             password: null,
-                            password_confirmation: null
+                            password_confirmation: null,
+                            role: response.data.role,
+                            created_at: response.data.created_at,
                         }
                     )
 
@@ -73,71 +75,6 @@ const UserEdit = () => {
         }
     }
 
-    const IsAutenticated = () => {
-
-        const config = {
-            headers:
-            {
-                Authorization: `${token}`,
-                Accept: 'application/json',
-            }
-        }
-
-        if (token) {
-            axios.get(apiUrl + 'auth/user', config)
-                .then((response) => {
-
-                    setAutenticatedUser(response.data)
-                    return true
-                }).catch((error) => {
-                    console.log(error)
-                    return false
-                })
-        }
-    }
-
-
-    const generatePassword = (event) => {
-
-        const pwd = generate({ length: 10, lowerCase: true, upperCase: true, numeric: true })
-
-        setValue('password', pwd, { shouldDirty: true })
-        setValue('password_confirmation', pwd, { shouldDirty: true })
-    }
-
-
-
-
-    const validateOptions = {
-        email: {
-            required: "Email obligatorio",
-            pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Email  invalido"
-            }
-        },
-        first_name: {
-            required: "Nombre obligatorio",
-        },
-        last_name: {
-            required: "Apellidos obligatorio",
-        },
-        password: {
-            minLength: {
-                value: 6,
-                message: "La contraseña debe tener un mínimo de 6 caracteres"
-            }
-        },
-        password_confirmation: {
-            validate: (value) => {
-                const { password } = getValues()
-                return password === value || "Las contraseñas no coinciden"
-            }
-        },
-        photo: {
-
-        },
-    }
 
 
     useEffect(() => {
@@ -146,8 +83,7 @@ const UserEdit = () => {
         }
         getUser()
 
-
-    }, [userData.id])
+    }, [userData.id, user_id])
 
     return (
         <>
@@ -162,34 +98,39 @@ const UserEdit = () => {
                         </MainHeader>
                         {/* start: page */}
                         <div className="row">
-                            <div className="col-12 col-md-3">
-                                <section className="card">
-                                    <div className="card-body">
-                                        <div className="thumb-info mb-3">
-                                            <div id="fileOutput">
-                                                {autenticatedUser.photo ?
-                                                    <img src={autenticatedUser.photo} className="rounded img-fluid" alt="Newal Medina" />
+                            {user_id &&
+                                <div className="col-12 col-md-3">
+                                    <section className="card">
+                                        <div className="card-body">
+                                            <div className="thumb-info mb-3">
+                                                <div id="fileOutput">
+                                                    {userData.photo ?
+                                                        <img src={userData.photo} className="rounded img-fluid" alt="Newal Medina" />
 
-                                                    :
-                                                    <img src={process.env.PUBLIC_URL + "/assets/admin/img/!logged-user.jpg"} className="rounded img-fluid" alt="Newal Medina" />
+                                                        :
+                                                        <img src={process.env.PUBLIC_URL + "/assets/admin/img/!logged-user.jpg"} className="rounded img-fluid" alt="Newal Medina" />
 
-                                                }
+                                                    }
+                                                </div>
+                                                <div className="thumb-info-title">
+                                                    <span className="thumb-info-inner">{userData.first_name} {userData.last_name}</span>
+                                                    <span className="thumb-info-type"> {userData.role}</span>
+                                                </div>
                                             </div>
-                                            <div className="thumb-info-title">
-                                                <span className="thumb-info-inner">{autenticatedUser.full_name}</span>
-                                                <span className="thumb-info-type"> {autenticatedUser.role}</span>
-                                            </div>
+                                            <div id="remove" className="text-danger" style={{ display: 'none', cursor: 'pointer', textAlign: 'center' }}><i className="fa fa-times" aria-hidden="true" /> Quitar imagen </div>
+                                            <hr className="dotted short" />
+                                            <h5 className="mb-2 mt-3">  Acerca de</h5>
+                                            <p className="text-2">
+                                                Miembro desde el  {userData.created_at}
+                                            </p>
                                         </div>
-                                        <div id="remove" className="text-danger" style={{ display: 'none', cursor: 'pointer', textAlign: 'center' }}><i className="fa fa-times" aria-hidden="true" /> Quitar imagen </div>
-                                        <hr className="dotted short" />
-                                        <h5 className="mb-2 mt-3">  Acerca de</h5>
-                                        <p className="text-2">
-                                            Miembro desde el  {autenticatedUser.created_at}
-                                        </p>
-                                    </div>
-                                </section>
-                            </div>
-                            <div className="col-12 col-md-9">
+                                    </section>
+                                </div>
+                            }
+
+                            <div
+
+                                className={user_id ? 'col-12 col-md-9' : 'col-12 '}>
                                 <section className="card form-wizard" id="w2">
                                     <div className="tabs">
                                         <ul className="nav nav-tabs nav-justify wizard-steps wizard-steps-style-2">
@@ -199,22 +140,25 @@ const UserEdit = () => {
                                                     Información personal
                                                 </a>
                                             </li>
-                                            <li className="nav-item">
-                                                <a href="#tab_2" data-bs-toggle="tab" className="nav-link text-center">
-                                                    <span className="badge badge-primary">2</span>
-                                                    Roles
-                                                </a>
-                                            </li>
+                                            {user_id &&
+                                                <li className="nav-item">
+                                                    <a href="#tab_2" data-bs-toggle="tab" className="nav-link text-center">
+                                                        <span className="badge badge-primary">2</span>
+                                                        Roles
+                                                    </a>
+                                                </li>
+                                            }
 
                                         </ul>
                                         <div className="tab-content">
                                             <div id="tab_1" className="tab-pane p-3 active">
-
                                                 <UserForm user={userData} />
                                             </div>
-                                            <div id="tab_2" className="tab-pane p-3">
-                                                dsadsadsa
-                                            </div>
+                                            {user_id &&
+                                                <div id="tab_2" className="tab-pane p-3">
+                                                    dsadsadsa
+                                                </div>
+                                            }
                                         </div>
                                     </div>
 

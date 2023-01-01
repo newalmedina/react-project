@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import axios from "axios"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { generate } from '@wcj/generate-password';
 
 import { useParams } from 'react-router-dom';
 import { UserContext } from "../../Context"
 import { set, useForm } from "react-hook-form"
+import Error from '../Includes/Error';
+import Success from '../Includes/Success'
 
 const UserForm = ({ user }) => {
+
+    const navigate = useNavigate();
     const { user_id } = useParams()
 
     const is_autenticated = localStorage.getItem("is_autenticated")
@@ -25,7 +29,11 @@ const UserForm = ({ user }) => {
         getValues,
         reset,
     } = useForm({
-        defaultValues: userData
+        defaultValues: {
+            first_name: null,
+            last_name: null,
+            email: null
+        }
     })
 
     const generatePassword = (event) => {
@@ -38,43 +46,47 @@ const UserForm = ({ user }) => {
 
 
     const submitForm = async (data) => {
-
+        console.log(data)
         const config = {
             headers:
             {
                 Authorization: `${token}`,
+                Accept: 'application/json',
+
             }
         }
-        await axios
-            .patch(apiUrl + 'user-profile-update/' + data.id,
-                data,
-                config)
-            .then((response) => {
-                console.log(response)
-                Swal.fire({
-                    position: "top-end",
-                    toast: true,
-                    icon: 'success',
-                    title: 'Operacion realizada',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
+
+        if (user.id) {
+            await axios
+                .patch(apiUrl + 'users/' + data.id,
+                    data,
+                    config)
+                .then((response) => {
+                    console.log(response)
+                    Success("Registro guardado Correctamente")
+                }).catch((error) => {
+                    console.log(error)
+                    Error('Ha ocurrido un error')
                 })
-            }).catch((error) => {
-                console.log(error)
-                Swal.fire({
-                    position: "top-end",
-                    toast: true,
-                    icon: 'error',
-                    title: 'Ha ocurrido un error',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
+        } else {
+            await axios
+                .post(apiUrl + 'users',
+                    data,
+                    config)
+                .then((response) => {
+                    console.log(response)
+                    Success("Registro guardado Correctamente")
+                    navigate("/admin/users/edit/" + response.data.id)
+                }).catch((error) => {
+                    console.log(error)
+                    Error('Ha ocurrido un error')
+
                 })
-            })
+        }
+
     }
 
-    const validateOptions = {
+    const [validateOptions, setValidateOptions] = useState({
         email: {
             required: "Email obligatorio",
             pattern: {
@@ -99,11 +111,14 @@ const UserForm = ({ user }) => {
                 const { password } = getValues()
                 return password === value || "Las contraseñas no coinciden"
             }
+
         },
         photo: {
 
         },
-    }
+    });
+
+
 
     useEffect(() => {
         setUserData({
@@ -114,6 +129,7 @@ const UserForm = ({ user }) => {
             password: null,
             password_confirmation: null,
         })
+        console.log(apiUrl)
         reset(userData)
     }, [user])
     return (
@@ -125,7 +141,9 @@ const UserForm = ({ user }) => {
                 noValidate="novalidate" >
 
                 <div className="card-body">
-                    <p>Aquí puede modificar sus datos, así como cambiar su usuario y contraseña de acceso a la herrramienta.</p>
+                    {user_id &&
+                        <p>Aquí puede modificar sus datos, así como cambiar su usuario y contraseña de acceso a la herrramienta.</p>
+                    }
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="form-group mb-3">
@@ -234,6 +252,13 @@ const UserForm = ({ user }) => {
                                 {errors.password_confirmation && (
                                     <small className="text-danger">{errors.password_confirmation.message}</small>
                                 )}
+                            </div>
+                        </div>
+                        <div className="col-sm-12">
+                            <div className="form-group mb-3">
+                                {!user_id &&
+                                    <p className='text-danger'>Si no introduces el campo contraseña se generará uno por defecto.</p>
+                                }
                             </div>
                         </div>
                     </div>

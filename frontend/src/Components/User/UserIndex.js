@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Swal from 'sweetalert2'
 import axios from "axios"
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import MainHeader from "../Layouts/Admin/MainHeader"
 import AdminLayout from '../Layouts/Admin/Default'
@@ -22,9 +22,50 @@ const UserIndex = () => {
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
 
     const [data, setData] = useState([]);
+    const [selectedRowsData, setselectedRowsData] = useState([]);
+
+    const onRowsSelectionHandler = (ids) => {
+        setselectedRowsData(ids.map((id) => data.find((row) => row.id === id)))
+    };
+
+    const massiveDelete = () => {
+        if (selectedRowsData.length > 0) {
+            Swal.fire({
+                title: '<small>¿Seguro que quieres eliminar este registro?</small>',
+                showDenyButton: true,
+                confirmButtonText: 'Eliminar',
+                denyButtonText: `Cancelar`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    if (token) {
+                        const config = {
+                            headers:
+                            {
+                                Authorization: `${token}`,
+                                Accept: 'application/json',
+                            }
+                        }
+                        selectedRowsData.map(function (element) {
+                            axios.delete(apiUrl + 'users/' + element.id, config)
+                                .then((response) => {
+                                    getUsers()
+
+                                }).catch((error) => {
+                                    Error("Error al intentar eliminar")
+                                    return false
+                                })
+                            return element.id;
+                        });
+
+                    }
+                }
+            })
+        }
+
+    };
 
     const [columnDefs] = useState([
-
         {
             field: 'active',
             headerName: 'Activo',
@@ -47,15 +88,7 @@ const UserIndex = () => {
                             .then((response) => {
                                 getUsers()
                             }).catch((error) => {
-                                Swal.fire({
-                                    position: "top-end",
-                                    toast: true,
-                                    icon: 'error',
-                                    title: 'Ha ocurrido un error',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true
-                                })
+                                Error("error al acceder al listado")
                                 return false
                             })
                     }
@@ -75,7 +108,32 @@ const UserIndex = () => {
                 );
             },
         },
-        { field: 'full_name', headerName: 'Nombre', minWidth: '600' },
+        {
+            field: 'photo',
+            headerName: 'Imagen',
+            width: 100,
+            sortable: false,
+            disableClickEventBubbling: false,
+
+            renderCell: (params) => {                // don't select this row after clicking
+
+                return (
+
+                    <>
+                        <figure className="profile-picture text-center">
+                            {params.row.photo ?
+
+                                < img src={params.row.photo} width="50" alt={params.row.initial_names} className="rounded-circle" />
+                                :
+                                <span className="profile-picture profile-picture-as-text bg-info text-white p-2 fw-bold rounded-circle">{params.row.initial_names}</span>
+                            }
+                        </figure>
+                    </>
+
+                );
+            },
+        },
+        { field: 'full_name', headerName: 'Nombre', minWidth: '500' },
         { field: 'email', headerName: 'Email', minWidth: '400' },
         {
             field: 'action',
@@ -86,7 +144,7 @@ const UserIndex = () => {
 
             renderCell: (params) => {                // don't select this row after clicking
                 const deleteUser = (e) => {
-                    e.stopPropagation();
+                    e.stopPropagation()
                     Swal.fire({
                         title: '<small>¿Seguro que quieres eliminar este registro?</small>',
                         showDenyButton: true,
@@ -107,26 +165,10 @@ const UserIndex = () => {
                                 axios.delete(apiUrl + 'users/' + params.id, config)
                                     .then((response) => {
                                         getUsers()
-                                        Swal.fire({
-                                            position: "top-end",
-                                            toast: true,
-                                            icon: 'success',
-                                            title: 'Registro eliminado correctamente',
-                                            showConfirmButton: false,
-                                            timer: 3000,
-                                            timerProgressBar: true
-                                        })
+                                        Success("Registro eliminado correctamente")
 
                                     }).catch((error) => {
-                                        Swal.fire({
-                                            position: "top-end",
-                                            toast: true,
-                                            icon: 'error',
-                                            title: 'Ha ocurrido un error',
-                                            showConfirmButton: false,
-                                            timer: 3000,
-                                            timerProgressBar: true
-                                        })
+                                        Error("Error al intentar eliminar")
                                         return false
                                     })
                             }
@@ -136,7 +178,7 @@ const UserIndex = () => {
                 }
                 const editUser = (e) => {
                     e.stopPropagation();
-                    navigate("/admin/users/" + params.id)
+                    navigate("/admin/users/edit/" + params.id)
 
                 }
 
@@ -154,16 +196,6 @@ const UserIndex = () => {
                 );
             },
         }
-
-        /*{
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (params: GridValueGetterParams) =>
-                `<button></button>`,
-        },*/
     ])
 
     const getUsers = () => {
@@ -179,7 +211,6 @@ const UserIndex = () => {
             axios.get(apiUrl + 'users', config)
                 .then((response) => {
                     setData(response.data)
-                    Success("Registro Eliminado Correctamente")
                 }).catch((error) => {
                     console.log(error)
                     Error('Ha ocurrido un error')
@@ -187,8 +218,6 @@ const UserIndex = () => {
                 })
         }
     }
-
-
 
     useEffect(() => {
         if (!is_autenticated) {
@@ -217,17 +246,27 @@ const UserIndex = () => {
                                         <h2 className="card-title">Listado Usuarios</h2>
                                     </div>
                                     <div className="card-body">
+                                        <div className='row'>
+                                            <div className={selectedRowsData.length > 0 ? 'col-sm-12 d-flex justify-content-between pb-4' : 'col-sm-12 d-flex justify-content-end pb-4'}>
+                                                {selectedRowsData.length > 0 &&
+                                                    <button onClick={massiveDelete} className="btn btn-danger" type="button">Eliminar masivo</button>
+
+                                                }
+                                                <Link className="btn btn-success" to='/admin/users/create'> <i className="fas fa-plus"></i> Nuevo usuario</Link>
+                                            </div>
+                                        </div>
 
                                         <div style={{ height: "100%", width: '100%' }} className="ag-theme-alpine">
                                             <DataGrid
                                                 autoHeight
                                                 autoWidth
                                                 rows={data}
+                                                onSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
                                                 columns={columnDefs}
                                                 pageSize={25}
                                                 rowsPerPageOptions={[5, 10, 20]}
-                                                //checkboxSelection
-                                                //  disableSelectionOnClick
+                                                checkboxSelection
+                                                disableSelectionOnClick
                                                 experimentalFeatures={{ newEditingApi: true }}
 
                                             />
