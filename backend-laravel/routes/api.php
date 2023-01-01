@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\UserControlller;
 use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::group([
 ], function () {
     Route::get('get-forget-password-token/{user_id}/{token}', [AuthController::class, 'getForgetPasswordToken']);
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login']);
     Route::post('signup', [AuthController::class, 'signUp']);
     Route::post('forget-password', [AuthController::class, 'forgetPassword']);
     Route::post('restore-password', [AuthController::class, 'restorePassword']);
@@ -33,8 +35,9 @@ Route::group([
     Route::group([
         'middleware' => 'auth:sanctum'
     ], function () {
-        Route::get('logout', [AuthController::class, 'logout']);
+
         Route::get('user', [AuthController::class, 'user']);
+        Route::get('logout', [AuthController::class, 'logout']);
     });
 });
 Route::group([
@@ -42,4 +45,8 @@ Route::group([
 ], function () {
     Route::get('get-user-profile', [UserProfileController::class, 'getUser']);
     Route::patch('user-profile-update/{id}', [UserProfileController::class, 'update']);
+    Route::patch('user-profile-update/{id}', [UserProfileController::class, 'update']);
+
+    Route::get('users/change-state/{id}', [UserControlller::class, 'changeState']);
+    Route::apiResource('users', UserControlller::class);
 });
