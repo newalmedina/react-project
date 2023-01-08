@@ -172,6 +172,7 @@ const Profile = () => {
         getUser()
 
         reset(userData)
+
         console.log(userData)
     }, [userData.id])
 
@@ -180,7 +181,7 @@ const Profile = () => {
             {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users-profile') &&
                 <Error403 />
             }
-            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-users-profile') &&
+            {autenticatedUser.id && autenticatedUser.active && autenticatedUser.permissions.includes('admin-users-profile') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader >

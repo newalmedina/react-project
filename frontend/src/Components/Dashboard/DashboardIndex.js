@@ -17,6 +17,7 @@ const DashboardIndex = () => {
         if (!is_autenticated) {
             navigate("/");
         }
+
     }, [autenticatedUser]);
 
     return (
@@ -24,7 +25,7 @@ const DashboardIndex = () => {
             {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-dashboard') &&
                 <Error403 />
             }
-            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-dashboard') &&
+            {autenticatedUser.id && autenticatedUser.active && autenticatedUser.permissions.includes('admin-dashboard') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader >

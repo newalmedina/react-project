@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import Swal from 'sweetalert2'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { generate } from '@wcj/generate-password';
 
 import { useParams } from 'react-router-dom';
-import { UserContext } from "../../Context"
-import { set, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import Error from '../Includes/Error';
 import Success from '../Includes/Success'
 
@@ -15,7 +13,6 @@ const UserForm = ({ user }) => {
     const navigate = useNavigate();
     const { user_id } = useParams()
 
-    const is_autenticated = localStorage.getItem("is_autenticated")
     const token = localStorage.getItem("token")
     const apiUrl = localStorage.getItem("apiurl")
 
@@ -32,9 +29,11 @@ const UserForm = ({ user }) => {
         defaultValues: {
             first_name: null,
             last_name: null,
-            email: null
+            email: null,
+            active: 1
         }
     })
+
 
     const generatePassword = (event) => {
 
@@ -62,7 +61,8 @@ const UserForm = ({ user }) => {
                     data,
                     config)
                 .then((response) => {
-                    console.log(response)
+
+
                     Success("Registro guardado Correctamente")
                 }).catch((error) => {
                     console.log(error)
@@ -76,6 +76,7 @@ const UserForm = ({ user }) => {
                 .then((response) => {
                     console.log(response)
                     Success("Registro guardado Correctamente")
+
                     navigate("/admin/users/edit/" + response.data.id)
                 }).catch((error) => {
                     console.log(error)
@@ -87,6 +88,9 @@ const UserForm = ({ user }) => {
     }
 
     const [validateOptions, setValidateOptions] = useState({
+        active: {
+            required: "El estado activo es obligatorio"
+        },
         email: {
             required: "Email obligatorio",
             pattern: {
@@ -126,11 +130,13 @@ const UserForm = ({ user }) => {
             email: user.email,
             first_name: user.first_name,
             last_name: user.last_name,
+            active: user.active,
             password: null,
             password_confirmation: null,
         })
-        console.log(apiUrl)
+
         reset(userData)
+
     }, [user])
     return (
         <>
@@ -144,6 +150,24 @@ const UserForm = ({ user }) => {
                     {user_id &&
                         <p>Aquí puede modificar sus datos, así como cambiar su usuario y contraseña de acceso a la herrramienta.</p>
                     }
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="form-group mb-3">
+                                <label>Activo</label>
+                                <div className="input-group">
+                                    <span className='me-3'>
+                                        <input value="1"   {...register("active", validateOptions.active)} type="radio" style={{ width: ' 20px', height: ' 20px' }} />Si
+                                    </span>
+                                    <span className='me-3'>
+                                        <input value="0"  {...register("active", validateOptions.active)} type="radio" style={{ width: ' 20px', height: ' 20px' }} />No
+                                    </span>
+                                </div>
+                                {errors.active && (
+                                    <small className="text-danger">{errors.active.message}</small>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="form-group mb-3">

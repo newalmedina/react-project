@@ -9,8 +9,8 @@ import MainHeader from "../Layouts/Admin/MainHeader"
 import AdminLayout from '../Layouts/Admin/Default'
 import { UserContext } from "../../Context"
 import Error403 from '../ErrorPages/Error403'
-import { useForm } from "react-hook-form"
 import UserForm from './UserForm';
+import RoleForm from './RoleForm';
 
 const UserEdit = () => {
     const { user_id } = useParams()
@@ -26,24 +26,18 @@ const UserEdit = () => {
         first_name: null,
         last_name: null,
         password: null,
+        active: 0,
         password_confirmation: null,
     })
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue,
-        getValues,
-        reset,
-    } = useForm()
+
 
 
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
     const navigate = useNavigate()
 
 
-    const getUser = async () => {
+    const getUser = () => {
         if (token && user_id) {
             const config = {
                 headers:
@@ -53,7 +47,7 @@ const UserEdit = () => {
                 }
             }
 
-            await axios.get(apiUrl + 'users/' + user_id, config)
+            axios.get(apiUrl + 'users/' + user_id, config)
                 .then((response) => {
                     setUserData(
                         {
@@ -61,9 +55,11 @@ const UserEdit = () => {
                             email: response.data.email,
                             first_name: response.data.first_name,
                             last_name: response.data.last_name,
+                            active: response.data.active,
                             password: null,
                             password_confirmation: null,
                             role: response.data.role,
+                            role_ids: response.data.role_ids,
                             created_at: response.data.created_at,
                         }
                     )
@@ -81,6 +77,7 @@ const UserEdit = () => {
         if (!is_autenticated) {
             navigate("/")
         }
+
         getUser()
 
     }, [userData.id, user_id])
@@ -94,7 +91,11 @@ const UserEdit = () => {
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader >
-                            My perfil
+                            {user_id ?
+                                "Editar usuario"
+                                :
+                                "Nuevo Usuario"
+                            }
                         </MainHeader>
                         {/* start: page */}
                         <div className="row">
@@ -156,7 +157,7 @@ const UserEdit = () => {
                                             </div>
                                             {user_id &&
                                                 <div id="tab_2" className="tab-pane p-3">
-                                                    dsadsadsa
+                                                    <RoleForm user={userData} />
                                                 </div>
                                             }
                                         </div>

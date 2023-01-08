@@ -56,6 +56,7 @@ class UserControlller extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'active' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
@@ -76,9 +77,9 @@ class UserControlller extends Controller
                 $user->password = Hash::make($request->password);
             } else {
                 $password = Str::random(10);
-                   $user->password = Hash::make($password);
+                $user->password = Hash::make($password);
             }
-            $user->active = 1;
+            $user->active = $request->active;
             $user->email_verified_at = Carbon::now();
             $user->save();
 
@@ -115,9 +116,11 @@ class UserControlller extends Controller
             ], 404);
         }
         $roles = [];
+        $role_ids = [];
 
         foreach ($user->roles as $role) {
             $roles[] = $role->display_name;
+            $role_ids[] = $role->id;
         }
 
         return response()->json(
@@ -126,7 +129,9 @@ class UserControlller extends Controller
                 "first_name" => $user->userProfile->first_name,
                 "last_name" => $user->userProfile->last_name,
                 "email" => $user->email,
+                "active" => $user->active,
                 "role" => implode(", ",  $roles),
+                "role_ids" => $role_ids,
                 "created_at" => Carbon::parse($user->created_at)->format("d/m/Y"),
 
                 // "updated_at" => "2022-12-04T07:33:11.000000Z"
@@ -144,6 +149,7 @@ class UserControlller extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'active' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|email|unique:users,email,' . $id,
@@ -165,6 +171,8 @@ class UserControlller extends Controller
                 ], 404);
             }
 
+
+            $user->active = $request->active;
             $user->email = $request->email;
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
@@ -177,6 +185,39 @@ class UserControlller extends Controller
 
             $user->push();
 
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Registro actualizado correctamente'
+            ], 200);
+        } catch (Exception  $ex) {
+            return $ex->getCode();
+        }
+    }
+
+    public function updateRole(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            "role_ids"    => "required|array",
+        ]);
+        // return $request;
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'validation error'
+            ], 422);
+        }
+        try {
+
+            DB::beginTransaction();
+            //creando user
+            $user = User::find($id);
+            if (empty($user)) {
+                return response()->json([
+                    'message' => 'no existe usuario'
+                ], 404);
+            }
+
+            $user->syncRoles($request->role_ids);
             DB::commit();
 
             return response()->json([

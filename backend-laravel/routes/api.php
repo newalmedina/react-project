@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\RoleControlller;
 use App\Http\Controllers\API\UserControlller;
 use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Http\Request;
@@ -47,5 +48,10 @@ Route::group([
     Route::patch('user-profile-update/{id}', [UserProfileController::class, 'update']);
 
     Route::get('users/change-state/{id}', [UserControlller::class, 'changeState']);
+    Route::patch('users/update-role/{id}', [UserControlller::class, 'updateRole']);
     Route::apiResource('users', UserControlller::class);
+
+    Route::get('roles/get-actives', [RoleControlller::class, 'getActives']);
+    Route::get('roles/change-state/{id}', [RoleControlller::class, 'changeState']);
+    Route::apiResource('roles', RoleControlller::class);
 });
