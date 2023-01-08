@@ -8,6 +8,8 @@ import AdminLayout from '../Layouts/Admin/Default'
 import { UserContext } from "../../Context"
 import Error403 from '../ErrorPages/Error403'
 import { useForm } from "react-hook-form"
+import Success from '../Includes/Success'
+import Error from '../Includes/Error'
 
 const Profile = () => {
 
@@ -23,8 +25,6 @@ const Profile = () => {
         first_name: null,
         last_name: null,
         photo: null,
-        password: null,
-        password_confirmation: null,
     })
 
     const {
@@ -32,6 +32,7 @@ const Profile = () => {
         handleSubmit,
         formState: { errors },
         getValues,
+        setValue,
         reset,
     } = useForm()
 
@@ -39,6 +40,27 @@ const Profile = () => {
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
     const navigate = useNavigate()
 
+    const IsAutenticated = () => {
+        if (token) {
+            const config = {
+                headers:
+                {
+                    Authorization: `${token}`,
+                    Accept: 'application/json',
+                }
+            }
+
+            axios.get(apiUrl + 'auth/user', config)
+                .then((response) => {
+
+                    setAutenticatedUser(response.data)
+                    return true
+                }).catch((error) => {
+                    console.log(error)
+                    return false
+                });
+        }
+    }
 
     const getUser = () => {
         if (token) {
@@ -57,9 +79,7 @@ const Profile = () => {
                             id: response.data.id,
                             email: response.data.email,
                             first_name: response.data.first_name,
-                            last_name: response.data.last_name,
-                            password: null,
-                            password_confirmation: null
+                            last_name: response.data.last_name
                         }
 
                     )
@@ -71,32 +91,10 @@ const Profile = () => {
         }
     }
 
-    const IsAutenticated = () => {
-
-        const config = {
-            headers:
-            {
-                Authorization: `${token}`,
-                Accept: 'application/json',
-            }
-        }
-
-        if (token) {
-            axios.get(apiUrl + 'auth/user', config)
-                .then((response) => {
-
-                    setAutenticatedUser(response.data)
-                    return true
-                }).catch((error) => {
-                    console.log(error)
-                    return false
-                })
-        }
-    }
-
     const addFile = e => {
         setFile(e.target.files[0])
     }
+
     const submitForm = async (data) => {
         data = {
             ...data,
@@ -125,28 +123,13 @@ const Profile = () => {
                 config)
             .then((response) => {
                 console.log(response)
-                Swal.fire({
-                    position: "top-end",
-                    toast: true,
-                    icon: 'success',
-                    title: 'Operacion realizada',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                })
+                Success("Registro guardado Correctamente")
                 IsAutenticated()
             }).catch((error) => {
                 // console.log(error)
                 setFile(null)
-                Swal.fire({
-                    position: "top-end",
-                    toast: true,
-                    icon: 'error',
-                    title: 'Ha ocurrido un error',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                })
+                Error('Ha ocurrido un error')
+
             })
     }
 
@@ -189,6 +172,8 @@ const Profile = () => {
         getUser()
 
         reset(userData)
+
+        console.log(userData)
     }, [userData.id])
 
     return (
@@ -196,7 +181,7 @@ const Profile = () => {
             {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users-profile') &&
                 <Error403 />
             }
-            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-users-profile') &&
+            {autenticatedUser.id && autenticatedUser.active && autenticatedUser.permissions.includes('admin-users-profile') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader >

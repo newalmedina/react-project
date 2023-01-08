@@ -6,6 +6,7 @@ import FrontLayout from '../Layouts/Front/Default'
 import { UserContext } from "../../Context"
 import { useForm } from "react-hook-form"
 const Login = (props) => {
+
     const {
         register,
         handleSubmit,
@@ -16,7 +17,8 @@ const Login = (props) => {
 
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
 
-    var apiUrl = localStorage.getItem("apiurl")
+    const apiUrl = localStorage.getItem("apiurl")
+    const token = localStorage.getItem("token")
     const is_autenticated = localStorage.getItem("is_autenticated")
 
     const [error, setError] = useState("");
@@ -24,7 +26,6 @@ const Login = (props) => {
 
     useEffect(() => {
 
-        console.log(autenticatedUser)
         if (is_autenticated) {
             navigate("/admin");
         }
@@ -39,7 +40,7 @@ const Login = (props) => {
             .then((response) => {
                 localStorage.setItem("token", response.data.access_token)
                 localStorage.setItem("is_autenticated", true)
-                IsAutenticated(response.data.access_token)
+                IsAutenticated()
             }).catch((error) => {
                 console.log(error)
                 if (error.response.status === 401) {
@@ -54,18 +55,16 @@ const Login = (props) => {
 
     }
 
-    const IsAutenticated = (token = null) => {
-        var apiUrl = localStorage.getItem("apiurl")
-
-        const config = {
-            headers:
-            {
-                Authorization: `${token}`,
-                Accept: 'application/json',
-            }
-        }
-
+    const IsAutenticated = () => {
         if (token) {
+            const config = {
+                headers:
+                {
+                    Authorization: `${token}`,
+                    Accept: 'application/json',
+                }
+            }
+
             axios.get(apiUrl + 'auth/user', config)
                 .then((response) => {
 

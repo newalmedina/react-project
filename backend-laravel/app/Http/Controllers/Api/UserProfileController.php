@@ -43,6 +43,7 @@ class UserProfileController extends Controller
                 "last_name" => $user->userProfile->last_name,
                 "email" => $user->email,
                 "photo" => $photo,
+
                 // "updated_at" => "2022-12-04T07:33:11.000000Z"
             ]
         );
@@ -72,8 +73,8 @@ class UserProfileController extends Controller
                     'message' => 'no existe usuario'
                 ], 404);
             }
-
             $user->email = $request->email;
+
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
             }

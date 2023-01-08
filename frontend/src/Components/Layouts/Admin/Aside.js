@@ -32,10 +32,10 @@ const Aside = () => {
                                 }
                                 {autenticatedUser.permissions.includes('admin-users') &&
                                     <li className="nav-expanded">
-                                        <a className="nav-link" href="layouts-default.html">
+                                        <Link to='/admin/users' className="nav-link">
                                             <i className="fas fa-user" aria-hidden="true"></i>
                                             <span>Usuarios</span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 }
                                 {autenticatedUser.permissions.includes('admin-categories') &&
