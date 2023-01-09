@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
+use App\Models\PermissionsTree;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserProfile;
@@ -55,11 +57,14 @@ class RoleControlller extends Controller
         try {
             $role = new Role();
             $role->name = Str::slug($request->display_name);
+            $role->active = $request->active;
             $role->display_name = $request->display_name;
             $role->description = $request->description;
+            $role->can_delete = 1;
             $role->save();
+
             return response()->json([
-                'message' => 'Registro actualizado correctamente'
+                'message' => 'Registro guardado correctamente'
             ], 200);
         } catch (Exception  $ex) {
             return $ex->getCode();
@@ -77,10 +82,28 @@ class RoleControlller extends Controller
         $role = Role::find($id);
         if (empty($role)) {
             return response()->json([
-                'message' => 'no existe usuario'
+                'message' => 'no existe rol'
             ], 404);
         }
-        return $role;
+
+        $selected_permission = [];
+        $a_arrayPermisos = $role->getArrayPermissions();
+
+        foreach ($a_arrayPermisos as $a_arrayPermiso) {
+            $selected_permission[] = $a_arrayPermiso;
+        }
+
+        return response()->json(
+            [
+                "id" => $role->id,
+                "display_name" => $role->display_name,
+                "description" => $role->description,
+                "active" => $role->active,
+                "selected_permission" => $selected_permission
+
+                // "updated_at" => "2022-12-04T07:33:11.000000Z"
+            ]
+        );
     }
 
 
@@ -104,7 +127,17 @@ class RoleControlller extends Controller
             ], 422);
         }
         try {
+            $role =  Role::find($id);
+            if (empty($role)) {
+                return response()->json([
+                    'message' => 'no existe rol'
+                ], 404);
+            }
 
+            $role->active = $request->active;
+            $role->display_name = $request->display_name;
+            $role->description = $request->description;
+            $role->save();
 
             return response()->json([
                 'message' => 'Registro actualizado correctamente'
@@ -121,12 +154,101 @@ class RoleControlller extends Controller
             $role = Role::find($id);
             if (empty($role)) {
                 return response()->json([
-                    'message' => 'no existe usuario'
+                    'message' => 'no existe rol'
                 ], 404);
             }
 
             $role->active = !$role->active;
             $role->save();
+
+            return response()->json([
+                'message' => 'Registro actualizado correctamente'
+            ], 200);
+        } catch (Exception  $ex) {
+            return $ex->getCode();
+        }
+    }
+
+    public function destroy($id)
+    {
+        $role = Role::find($id);
+
+        if (empty($role)) {
+            return response()->json([
+                'message' => 'no existe rol'
+            ], 404);
+        }
+        if (!$role->can_delete) {
+            return response()->json([
+                'message' => 'Rol no se puede eliminar'
+            ], 402);
+        }
+
+        try {
+
+            $role->delete();
+
+            return response()->json([
+                'message' => 'Registro eliminado correctamente'
+            ], 200);
+        } catch (Exception  $ex) {
+            return $ex->getCode();
+        }
+    }
+
+    public function getPermissions($id)
+    {
+        $role = Role::find($id);
+        if (empty($role)) {
+            return response()->json([
+                'message' => 'no existe rol'
+            ], 404);
+        }
+
+        $permissionsTrees = PermissionsTree::withDepth()->with('permission')->get()->sortBy('_lft');
+
+        $permissionList = [];
+
+        foreach ($permissionsTrees as $permissionsTree) {
+
+            $permissionList[] = [
+                "id" => $permissionsTree->id,
+                "parent_id" => $permissionsTree->parent_id,
+                "permissions_id" => $permissionsTree->permissions_id,
+                "permission_display_name" => !empty($permissionsTree->permission) ? $permissionsTree->permission->display_name : null,
+            ];
+        }
+
+        return $permissionList;
+    }
+    public function updatePermission(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            "permission_ids"    => "required|array",
+        ]);
+        // return $request;
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'validation error'
+            ], 422);
+        }
+        try {
+
+            DB::beginTransaction();
+            //creando user
+            $role = Role::find($id);
+
+            if (empty($role)) {
+                return response()->json([
+                    'message' => 'no existe role'
+                ], 404);
+            }
+
+
+            $role->syncPermissions($request->permission_ids);
+
+
+            DB::commit();
 
             return response()->json([
                 'message' => 'Registro actualizado correctamente'

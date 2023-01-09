@@ -9,6 +9,8 @@ import Dashboard from "../components/Dashboard/DashboardIndex"
 import Profile from '../components/Profile/profile';
 import UserIndex from '../components/User/UserIndex';
 import UserEdit from '../components/User/UserEdit';
+import RoleIndex from '../components/Role/RoleIndex';
+import RoleEdit from '../components/Role/RoleEdit';
 
 export default () => {
 
@@ -29,6 +31,11 @@ export default () => {
                 <Route path="/admin/users" element={<UserIndex />} />
                 <Route path="/admin/users/edit/:user_id" element={<UserEdit />} />
                 <Route path="/admin/users/create" element={<UserEdit />} />
+
+                <Route path="/admin/roles" element={<RoleIndex />} />
+                <Route path="/admin/roles/edit/:role_id" element={<RoleEdit />} />
+                <Route path="/admin/roles/create" element={<RoleEdit />} />
+
             </Routes>
         </BrowserRouter>
     )

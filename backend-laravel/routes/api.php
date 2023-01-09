@@ -53,5 +53,7 @@ Route::group([
 
     Route::get('roles/get-actives', [RoleControlller::class, 'getActives']);
     Route::get('roles/change-state/{id}', [RoleControlller::class, 'changeState']);
+    Route::get('roles/get-permissions/{id}', [RoleControlller::class, 'getPermissions']);
+    Route::patch('roles/update-permissions/{id}', [RoleControlller::class, 'updatePermission']);
     Route::apiResource('roles', RoleControlller::class);
 });

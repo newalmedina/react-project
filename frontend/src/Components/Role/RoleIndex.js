@@ -12,7 +12,7 @@ import { DataGrid, GridRowParams, GridColDef, GridValueGetterParams, GridRowHeig
 import Success from '../Includes/Success'
 import Error from '../Includes/Error'
 
-const UserIndex = () => {
+const RoleIndex = () => {
     const navigate = useNavigate()
 
     const is_autenticated = localStorage.getItem("is_autenticated")
@@ -28,42 +28,6 @@ const UserIndex = () => {
         setselectedRowsData(ids.map((id) => data.find((row) => row.id === id)))
     };
 
-    const massiveDelete = () => {
-        if (selectedRowsData.length > 0) {
-            Swal.fire({
-                title: '<small>¿Seguro que quieres eliminar este registro?</small>',
-                showDenyButton: true,
-                confirmButtonText: 'Eliminar',
-                denyButtonText: `Cancelar`,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    if (token) {
-                        const config = {
-                            headers:
-                            {
-                                Authorization: `${token}`,
-                                Accept: 'application/json',
-                            }
-                        }
-                        selectedRowsData.map(function (element) {
-                            axios.delete(apiUrl + 'users/' + element.id, config)
-                                .then((response) => {
-                                    getUsers()
-
-                                }).catch((error) => {
-                                    Error("Error al intentar eliminar")
-                                    return false
-                                })
-                            return element.id;
-                        });
-
-                    }
-                }
-            })
-        }
-
-    };
 
     const [columnDefs] = useState([
         {
@@ -84,9 +48,9 @@ const UserIndex = () => {
                             }
                         }
 
-                        axios.get(apiUrl + 'users/change-state/' + params.id, config)
+                        axios.get(apiUrl + 'roles/change-state/' + params.id, config)
                             .then((response) => {
-                                getUsers()
+                                getRoles()
                             }).catch((error) => {
                                 Error("error al acceder al listado")
                                 return false
@@ -108,33 +72,8 @@ const UserIndex = () => {
                 );
             },
         },
-        {
-            field: 'photo',
-            headerName: 'Imagen',
-            width: 100,
-            sortable: false,
-            disableClickEventBubbling: false,
-
-            renderCell: (params) => {                // don't select this row after clicking
-
-                return (
-
-                    <>
-                        <figure className="profile-picture text-center">
-                            {params.row.photo ?
-
-                                < img src={params.row.photo} width="50" alt={params.row.initial_names} className="rounded-circle" />
-                                :
-                                <span className="profile-picture profile-picture-as-text bg-info text-white p-2 fw-bold rounded-circle">{params.row.initial_names}</span>
-                            }
-                        </figure>
-                    </>
-
-                );
-            },
-        },
-        { field: 'full_name', headerName: 'Nombre', minWidth: '500' },
-        { field: 'email', headerName: 'Email', minWidth: '400' },
+        { field: 'display_name', headerName: 'Nombre', minWidth: '500' },
+        { field: 'description', headerName: 'Descripción', minWidth: '500' },
         {
             field: 'action',
             headerName: 'Acciones',
@@ -162,9 +101,9 @@ const UserIndex = () => {
                                     }
                                 }
 
-                                axios.delete(apiUrl + 'users/' + params.id, config)
+                                axios.delete(apiUrl + 'roles/' + params.id, config)
                                     .then((response) => {
-                                        getUsers()
+                                        getRoles()
                                         Success("Registro eliminado correctamente")
 
                                     }).catch((error) => {
@@ -178,19 +117,25 @@ const UserIndex = () => {
                 }
                 const editUser = (e) => {
                     e.stopPropagation();
-                    navigate("/admin/users/edit/" + params.id)
+                    navigate("/admin/roles/edit/" + params.id)
 
                 }
 
                 return (
 
                     <>
+
                         <button className='btn btn-info btn-sm me-1' color="warning" size="small" onClick={editUser}>
                             <i className="fas fa-edit" aria-hidden="true"></i>
                         </button>
-                        <button className='btn btn-danger btn-sm' color="error" size="small" onClick={deleteUser}>
-                            <i className="fas fa-trash" aria-hidden="true"></i>
-                        </button>
+                        {
+                            params.row.can_delete ?
+                                <button className='btn btn-danger btn-sm' color="error" size="small" onClick={deleteUser}>
+                                    <i className="fas fa-trash" aria-hidden="true"></i>
+                                </button> :
+                                null
+                        }
+
                     </>
 
                 );
@@ -198,7 +143,7 @@ const UserIndex = () => {
         }
     ])
 
-    const getUsers = () => {
+    const getRoles = () => {
         if (token) {
             const config = {
                 headers:
@@ -208,7 +153,7 @@ const UserIndex = () => {
                 }
             }
 
-            axios.get(apiUrl + 'users', config)
+            axios.get(apiUrl + 'roles', config)
                 .then((response) => {
                     setData(response.data)
                 }).catch((error) => {
@@ -223,36 +168,33 @@ const UserIndex = () => {
         if (!is_autenticated) {
             navigate("/")
         }
-        getUsers()
+        getRoles()
 
     }, [])
 
     return (
         <>
-            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users') &&
+            {autenticatedUser.id && !autenticatedUser.active && !autenticatedUser.permissions.includes('admin-roles') &&
                 <Error403 />
             }
-            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-users') &&
+            {autenticatedUser.id && autenticatedUser.active && autenticatedUser.permissions.includes('admin-roles') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader >
-                            Gestión Usuarios
+                            Gestión Roles
                         </MainHeader>
                         {/* start: page */}
                         <div className="row">
                             <div className="col-sm-12">
                                 <section className="card">
                                     <div className="card-header">
-                                        <h2 className="card-title">Listado Usuarios</h2>
+                                        <h2 className="card-title">Listado Roles</h2>
                                     </div>
                                     <div className="card-body">
                                         <div className='row'>
                                             <div className={selectedRowsData.length > 0 ? 'col-sm-12 d-flex justify-content-between pb-4' : 'col-sm-12 d-flex justify-content-end pb-4'}>
-                                                {selectedRowsData.length > 0 &&
-                                                    <button onClick={massiveDelete} className="btn btn-danger" type="button">Eliminar masivo</button>
 
-                                                }
-                                                <Link className="btn btn-success" to='/admin/users/create'> <i className="fas fa-plus"></i> Nuevo usuario</Link>
+                                                <Link className="btn btn-success" to='/admin/roles/create'> <i className="fas fa-plus"></i> Nuevo Rol</Link>
                                             </div>
                                         </div>
 
@@ -265,8 +207,7 @@ const UserIndex = () => {
                                                 columns={columnDefs}
                                                 pageSize={25}
                                                 rowsPerPageOptions={[5, 10, 20]}
-                                                checkboxSelection
-                                                disableSelectionOnClick
+
                                                 experimentalFeatures={{ newEditingApi: true }}
 
                                             />
@@ -285,4 +226,4 @@ const UserIndex = () => {
     )
 }
 
-export default UserIndex
+export default RoleIndex
