@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\CategoryControlller;
 use App\Http\Controllers\API\RoleControlller;
 use App\Http\Controllers\API\UserControlller;
 use App\Http\Controllers\Api\UserProfileController;
@@ -56,4 +57,8 @@ Route::group([
     Route::get('roles/get-permissions/{id}', [RoleControlller::class, 'getPermissions']);
     Route::patch('roles/update-permissions/{id}', [RoleControlller::class, 'updatePermission']);
     Route::apiResource('roles', RoleControlller::class);
+
+    Route::get('categories/get-actives', [CategoryControlller::class, 'getActives']);
+    Route::get('categories/change-state/{id}', [CategoryControlller::class, 'changeState']);
+    Route::apiResource('categories', CategoryControlller::class);
 });
