@@ -48,10 +48,10 @@ const Aside = () => {
                                 }
                                 {autenticatedUser.permissions.includes('admin-categories') &&
                                     <li className="nav-expanded">
-                                        <a className="nav-link" href="layouts-default.html">
+                                        <Link to='/admin/categories' className="nav-link">
                                             <i className="fas fa-list" aria-hidden="true"></i>
-                                            <span>Categorias</span>
-                                        </a>
+                                            <span>Categorías</span>
+                                        </Link>
                                     </li>
                                 }
 
