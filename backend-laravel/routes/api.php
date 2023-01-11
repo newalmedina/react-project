@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\API\CategoryControlller;
+use App\Http\Controllers\API\ProductControlller;
 use App\Http\Controllers\API\RoleControlller;
 use App\Http\Controllers\API\UserControlller;
 use App\Http\Controllers\Api\UserProfileController;
@@ -61,4 +62,8 @@ Route::group([
     Route::get('categories/get-actives', [CategoryControlller::class, 'getActives']);
     Route::get('categories/change-state/{id}', [CategoryControlller::class, 'changeState']);
     Route::apiResource('categories', CategoryControlller::class);
+
+    Route::get('products/get-actives', [ProductControlller::class, 'getActives']);
+    Route::get('products/change-state/{id}', [ProductControlller::class, 'changeState']);
+    Route::apiResource('products', ProductControlller::class);
 });
