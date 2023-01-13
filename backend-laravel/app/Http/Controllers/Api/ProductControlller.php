@@ -17,7 +17,19 @@ class ProductControlller extends Controller
      */
     public function index()
     {
-        return Product::all();
+        $data = [];
+        $products = Product::all();
+
+        foreach ($products as $product) {
+            $data[] = [
+                "id" => $product->id,
+                "name" => $product->name,
+                "active" => $product->active,
+                "description" => $product->description,
+                "category" => $product->category->name,
+            ];
+        }
+        return $data;
     }
 
     public function getActives()

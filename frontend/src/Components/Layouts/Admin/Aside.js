@@ -54,6 +54,14 @@ const Aside = () => {
                                         </Link>
                                     </li>
                                 }
+                                {autenticatedUser.permissions.includes('admin-products') &&
+                                    <li className="nav-expanded">
+                                        <Link to='/admin/products' className="nav-link">
+                                            <i className="fab fa-product-hunt" aria-hidden="true"></i>
+                                            <span>Productos</span>
+                                        </Link>
+                                    </li>
+                                }
 
                             </ul>
                         </nav>

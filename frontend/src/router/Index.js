@@ -13,6 +13,8 @@ import RoleIndex from '../components/Role/RoleIndex';
 import RoleEdit from '../components/Role/RoleEdit';
 import CategoryIndex from '../components/Category/CategotyIndex';
 import CategoryEdit from '../components/Category/CategoryEdit';
+import ProductIndex from '../components/Product/ProductIndex';
+import ProductEdit from '../components/Product/ProductEdit';
 
 export default () => {
 
@@ -41,6 +43,10 @@ export default () => {
                 <Route path="/admin/categories" element={<CategoryIndex />} />
                 <Route path="/admin/categories/edit/:category_id" element={<CategoryEdit />} />
                 <Route path="/admin/categories/create" element={<CategoryEdit />} />
+
+                <Route path="/admin/products" element={<ProductIndex />} />
+                <Route path="/admin/products/edit/:product_id" element={<ProductEdit />} />
+                <Route path="/admin/products/create" element={<ProductEdit />} />
 
             </Routes>
         </BrowserRouter>
