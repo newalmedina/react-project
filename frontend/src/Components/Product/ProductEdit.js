@@ -10,6 +10,7 @@ import AdminLayout from '../Layouts/Admin/Default'
 import { UserContext } from "../../Context"
 import Error403 from '../ErrorPages/Error403'
 import ProductForm from './ProductForm';
+import ProductImages from './ProductImages';
 
 const ProductEdit = () => {
     const { product_id } = useParams()
@@ -22,17 +23,14 @@ const ProductEdit = () => {
         id: null,
         name: null,
         description: null,
+        images: [],
         active: 0,
     })
-
-
-
 
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
     const navigate = useNavigate()
 
-
-    const getRole = () => {
+    const getProduct = () => {
         if (token && product_id) {
             const config = {
                 headers:
@@ -48,9 +46,11 @@ const ProductEdit = () => {
                         {
                             id: response.data.id,
                             name: response.data.name,
+                            price: response.data.price,
                             description: response.data.description,
                             active: response.data.active,
-                            category: response.data.category,
+                            category: response.data.category_id,
+                            images: response.data.images,
 
                         }
                     )
@@ -62,13 +62,11 @@ const ProductEdit = () => {
         }
     }
 
-
-
     useEffect(() => {
         if (!is_autenticated) {
             navigate("/")
         }
-        getRole()
+        getProduct()
     }, [productData.id, product_id])
 
     return (
@@ -106,7 +104,7 @@ const ProductEdit = () => {
                                                 <li className="nav-item">
                                                     <a href="#tab_2" data-bs-toggle="tab" className="nav-link text-center">
                                                         <span className="badge badge-primary">2</span>
-                                                        Permisos
+                                                        Imágenes
                                                     </a>
                                                 </li>
                                             }
@@ -114,10 +112,11 @@ const ProductEdit = () => {
                                         </ul>
                                         <div className="tab-content">
                                             <div id="tab_1" className="tab-pane p-3 active">
-                                                <ProductForm product={productData} />
+                                                <ProductForm product={productData} getProduct={getProduct} />
                                             </div>
                                             {product_id &&
                                                 <div id="tab_2" className="tab-pane p-3">
+                                                    <ProductImages product={productData} getProduct={getProduct} />
 
                                                 </div>
                                             }

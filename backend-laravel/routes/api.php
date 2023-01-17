@@ -65,5 +65,9 @@ Route::group([
 
     Route::get('products/get-actives', [ProductControlller::class, 'getActives']);
     Route::get('products/change-state/{id}', [ProductControlller::class, 'changeState']);
+    Route::get('products/images/{id}', [ProductControlller::class, 'listImageProduct']);
+
+    Route::post('products/store-image/{id}', [ProductControlller::class, 'storeImage']);
+    Route::delete('products/delete-image/{id}', [ProductControlller::class, 'deleteImage']);
     Route::apiResource('products', ProductControlller::class);
 });

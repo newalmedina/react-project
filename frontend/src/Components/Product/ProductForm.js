@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { generate } from '@wcj/generate-password';
 
 import { useForm } from "react-hook-form"
@@ -8,13 +8,14 @@ import Error from '../Includes/Error';
 import Success from '../Includes/Success'
 import Swal from 'sweetalert2';
 
-const ProductForm = ({ product }) => {
+const ProductForm = ({ product, getProduct }) => {
 
 
     const token = localStorage.getItem("token")
     const apiUrl = localStorage.getItem("apiurl")
     const [productData, setProductData] = useState()
-
+    const [categoriesData, setCategoriesData] = useState([])
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
@@ -26,12 +27,13 @@ const ProductForm = ({ product }) => {
         defaultValues: {
             name: null,
             description: null,
-            active: 1
+            active: 1,
+            price: null
         }
     })
 
     const submitForm = async (data) => {
-        console.log(data)
+
         const config = {
             headers:
             {
@@ -48,18 +50,22 @@ const ProductForm = ({ product }) => {
                     config)
                 .then((response) => {
 
-                    Success("Registro guardado Correctamente")
+                    Success("Registro actualizado Correctamente")
+
                 }).catch((error) => {
                     console.log(error)
                     Error('Ha ocurrido un error')
                 })
         } else {
+
             await axios
                 .post(apiUrl + 'products',
                     data,
                     config)
                 .then((response) => {
                     console.log(response)
+
+                    navigate("/admin/products/edit/" + response.data.id)
                     Success("Registro guardado Correctamente")
                 }).catch((error) => {
                     console.log(error)
@@ -76,19 +82,51 @@ const ProductForm = ({ product }) => {
         },
         name: {
             required: "Nombre obligatorio"
-
+        },
+        category_id: {
+            required: "Seleccione categoría obligatorio"
+        },
+        price: {
+            required: "Precio obligatorio"
         }
     });
 
+    const getCategoriesList = () => {
+        if (token) {
+            const config = {
+                headers:
+                {
+                    Authorization: `${token}`,
+                    Accept: 'application/json',
+                }
+            }
+
+            axios.get(apiUrl + 'categories/get-actives', config)
+                .then((response) => {
+
+                    setCategoriesData(
+                        response.data
+                    )
+
+                }).catch((error) => {
+                    console.log(error)
+                    return false
+                })
+        }
+    }
+
     useEffect(() => {
         setProductData({
-            // id: product.id,
+            id: product.id,
             name: product.name,
             description: product.description,
+            price: product.price,
             active: product.active,
-            product_id: product.product_id,
+            category_id: product.category_id,
         })
+        getCategoriesList()
         reset(productData)
+        setValue("category_id", product.category_id)
     }, [product])
     return (
         <>
@@ -130,6 +168,53 @@ const ProductForm = ({ product }) => {
                                 </div>
                                 {errors.name && (
                                     <small className="text-danger">{errors.name.message}</small>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="form-group mb-3">
+                                <label>Precio</label>
+                                <div className="input-group">
+                                    <input
+                                        name="price"
+                                        id="price"
+                                        type="text"
+                                        className="form-control form-control-lg"
+                                        {...register('price', validateOptions.price)} />
+                                </div>
+                                {errors.price && (
+                                    <small className="text-danger">{errors.price.message}</small>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="form-group mb-3">
+                                <label>Categoría</label>
+                                <div className="input-group">
+                                    <select
+                                        name="name"
+                                        id="name"
+                                        className="form-control form-control-lg"
+                                        {...register('category_id', validateOptions.category_id)}
+                                    >
+                                        <option value="" >Seleccione categoría</option>
+                                        {
+                                            categoriesData.map((category) =>
+                                                <option value={category.id} key={category.id}>
+                                                    {category.name}
+                                                </option>
+
+                                            )
+                                        }
+
+                                    </select>
+                                </div>
+                                {errors.category_id && (
+                                    <small className="text-danger">{errors.category_id.message}</small>
                                 )}
                             </div>
                         </div>
