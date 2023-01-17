@@ -1,20 +1,21 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Login from "../components/Auth/Login"
-import Register from "../components/Auth/Register"
-import ResetPassword from "../components/Auth/ResetPassword"
-import ForgetPassword from "../components/Auth/ForgetPassword"
-import Dashboard from "../components/Dashboard/DashboardIndex"
-import Profile from '../components/Profile/profile';
-import UserIndex from '../components/User/UserIndex';
-import UserEdit from '../components/User/UserEdit';
-import RoleIndex from '../components/Role/RoleIndex';
-import RoleEdit from '../components/Role/RoleEdit';
-import CategoryIndex from '../components/Category/CategotyIndex';
+import ForgetPassword from '../components/Auth/ForgetPassword';
+import Login from '../components/Auth/Login';
+import Register from '../components/Auth/Register';
+import ResetPassword from '../components/Auth/ResetPassword';
 import CategoryEdit from '../components/Category/CategoryEdit';
-import ProductIndex from '../components/Product/ProductIndex';
+import CategoryIndex from '../components/Category/CategotyIndex';
+import DashboardIndex from '../components/Dashboard/DashboardIndex';
 import ProductEdit from '../components/Product/ProductEdit';
+import ProductIndex from '../components/Product/ProductIndex';
+import Profile from '../components/Profile/profile';
+import RoleEdit from '../components/Role/RoleEdit';
+import RoleIndex from '../components/Role/RoleIndex';
+import UserEdit from '../components/User/UserEdit';
+import UserIndex from '../components/User/UserIndex';
+
+
 
 export default () => {
 
@@ -30,7 +31,7 @@ export default () => {
                 <Route path="/reset-password/:user_id/:token" element={<ResetPassword />} exact />
 
                 {/* Rutas Administración con autenticación */}
-                <Route path="/admin" element={<Dashboard />} />
+                <Route path="/admin" element={<DashboardIndex />} />
                 <Route path="/admin/profile" element={<Profile />} />
                 <Route path="/admin/users" element={<UserIndex />} />
                 <Route path="/admin/users/edit/:user_id" element={<UserEdit />} />
