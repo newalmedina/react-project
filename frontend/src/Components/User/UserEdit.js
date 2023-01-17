@@ -84,10 +84,10 @@ const UserEdit = () => {
 
     return (
         <>
-            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users-profile') &&
+            {autenticatedUser.id && !autenticatedUser.permissions.includes('admin-users') &&
                 <Error403 />
             }
-            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-users-profile') &&
+            {autenticatedUser.id && autenticatedUser.permissions.includes('admin-users') &&
                 <AdminLayout>
                     <section role="main" className="content-body">
                         <MainHeader >

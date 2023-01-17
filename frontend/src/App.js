@@ -27,6 +27,7 @@ function App() {
         .then((response) => {
 
           setAutenticatedUser(response.data)
+
           return true
         }).catch((error) => {
           console.log(error)

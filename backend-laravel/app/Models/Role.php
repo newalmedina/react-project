@@ -7,6 +7,19 @@ use Laratrust\Models\LaratrustRole;
 class Role extends LaratrustRole
 {
     public $guarded = [];
+
+    public function getArraySlugPermissionsAttribute()
+    {
+        return $permissionRole = $this->permissions()->get();
+
+        $a_arrayPermisos = array();
+
+        foreach ($permissionRole as $key => $value) {
+            $a_arrayPermisos[$value->id] = $value->id;
+        }
+
+        return $a_arrayPermisos;
+    }
     public function getArrayPermissions()
     {
         $permissionRole = $this->permissions()->get();

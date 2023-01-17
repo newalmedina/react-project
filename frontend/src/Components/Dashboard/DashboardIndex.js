@@ -17,7 +17,7 @@ const DashboardIndex = () => {
         if (!is_autenticated) {
             navigate("/");
         }
-
+        console.log(autenticatedUser)
     }, [autenticatedUser]);
 
     return (

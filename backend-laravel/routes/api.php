@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\CategoryControlller;
+use App\Http\Controllers\API\ProductControlller;
 use App\Http\Controllers\API\RoleControlller;
 use App\Http\Controllers\API\UserControlller;
 use App\Http\Controllers\Api\UserProfileController;
@@ -53,5 +55,19 @@ Route::group([
 
     Route::get('roles/get-actives', [RoleControlller::class, 'getActives']);
     Route::get('roles/change-state/{id}', [RoleControlller::class, 'changeState']);
+    Route::get('roles/get-permissions/{id}', [RoleControlller::class, 'getPermissions']);
+    Route::patch('roles/update-permissions/{id}', [RoleControlller::class, 'updatePermission']);
     Route::apiResource('roles', RoleControlller::class);
+
+    Route::get('categories/get-actives', [CategoryControlller::class, 'getActives']);
+    Route::get('categories/change-state/{id}', [CategoryControlller::class, 'changeState']);
+    Route::apiResource('categories', CategoryControlller::class);
+
+    Route::get('products/get-actives', [ProductControlller::class, 'getActives']);
+    Route::get('products/change-state/{id}', [ProductControlller::class, 'changeState']);
+    Route::get('products/images/{id}', [ProductControlller::class, 'listImageProduct']);
+
+    Route::post('products/store-image/{id}', [ProductControlller::class, 'storeImage']);
+    Route::delete('products/delete-image/{id}', [ProductControlller::class, 'deleteImage']);
+    Route::apiResource('products', ProductControlller::class);
 });

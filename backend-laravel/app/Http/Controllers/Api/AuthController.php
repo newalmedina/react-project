@@ -128,11 +128,14 @@ class AuthController extends Controller
         $user = $request->user();
 
         $roles = [];
+        $permissions = [];
 
         foreach ($user->roles as $role) {
             $roles[] = $role->display_name;
+            foreach ($role->arraySlugPermissions as $permision) {
+                $permissions[] = $permision->name;
+            }
         }
-
 
         $photo = null;
         if (!empty($user->userProfile->photo)) {
@@ -152,7 +155,7 @@ class AuthController extends Controller
                 "active" => $user->active,
                 "role" => implode(", ",  $roles),
                 "photo" => $photo,
-                "permissions" => $user->all_permissions_array,
+                "permissions" => $permissions,
                 "created_at" => Carbon::parse($user->created_at)->format("d/m/Y"),
                 // "updated_at" => "2022-12-04T07:33:11.000000Z"
             ]

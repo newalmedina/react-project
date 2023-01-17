@@ -18,7 +18,7 @@ const Login = (props) => {
     const { autenticatedUser, setAutenticatedUser } = useContext(UserContext)
 
     const apiUrl = localStorage.getItem("apiurl")
-    const token = localStorage.getItem("token")
+    var token = localStorage.getItem("token")
     const is_autenticated = localStorage.getItem("is_autenticated")
 
     const [error, setError] = useState("");
@@ -40,6 +40,7 @@ const Login = (props) => {
             .then((response) => {
                 localStorage.setItem("token", response.data.access_token)
                 localStorage.setItem("is_autenticated", true)
+                token = localStorage.getItem("token")
                 IsAutenticated()
             }).catch((error) => {
                 console.log(error)

@@ -38,12 +38,28 @@ const Aside = () => {
                                         </Link>
                                     </li>
                                 }
+                                {autenticatedUser.permissions.includes('admin-roles') &&
+                                    <li className="nav-expanded">
+                                        <Link to='/admin/roles' className="nav-link">
+                                            <i className="fas fa-user-lock" aria-hidden="true"></i>
+                                            <span>Roles</span>
+                                        </Link>
+                                    </li>
+                                }
                                 {autenticatedUser.permissions.includes('admin-categories') &&
                                     <li className="nav-expanded">
-                                        <a className="nav-link" href="layouts-default.html">
+                                        <Link to='/admin/categories' className="nav-link">
                                             <i className="fas fa-list" aria-hidden="true"></i>
-                                            <span>Categorias</span>
-                                        </a>
+                                            <span>Categorías</span>
+                                        </Link>
+                                    </li>
+                                }
+                                {autenticatedUser.permissions.includes('admin-products') &&
+                                    <li className="nav-expanded">
+                                        <Link to='/admin/products' className="nav-link">
+                                            <i className="fab fa-product-hunt" aria-hidden="true"></i>
+                                            <span>Productos</span>
+                                        </Link>
                                     </li>
                                 }
 
