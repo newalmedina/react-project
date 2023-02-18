@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 
+
 Route::group([
     'prefix' => 'auth'
 ], function () {
@@ -42,7 +43,9 @@ Route::group([
         Route::get('user', [AuthController::class, 'user']);
         Route::get('logout', [AuthController::class, 'logout']);
     });
+
 });
+
 Route::group([
     'middleware' => 'auth:sanctum'
 ], function () {
@@ -71,3 +74,13 @@ Route::group([
     Route::delete('products/delete-image/{id}', [ProductControlller::class, 'deleteImage']);
     Route::apiResource('products', ProductControlller::class);
 });
+
+Route::group([
+    'prefix' => 'app'
+], function () {
+    Route::get('products/get-last-products', [ProductControlller::class, 'lastProducts']);
+
+
+
+});
+

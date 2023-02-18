@@ -53,6 +53,36 @@ class ProductControlller extends Controller
         return Product::active()->get();
     }
 
+    public function lastProducts()
+    {
+
+        $myServiceSPW = new StoragePathWork("products");
+        $data = [];
+        $products= Product::active()->orderby("created_at","desc")->limit(3)->get();
+        foreach ($products as $product) {
+            $imageList = [];
+            foreach ($product->images as $image) {
+                $file = $myServiceSPW->getFile($image->name, '/products') ? urldecode($myServiceSPW->getFile($image->name, '/products')) : null;
+                if (App::environment('local')) {
+                    $file = "http://127.0.0.1:8887/products/" . $image->name;
+                }
+                $imageList[] = [
+                    "id" => $image->id,
+                    "name" => $file
+                ];
+            }
+            $data[] = [
+                "id" => $product->id,
+                "name" => $product->name,
+                "active" => $product->active,
+                "description" => $product->description,
+                "category" => $product->category->name,
+                "images" =>  $imageList,
+            ];
+        }
+        return $data;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
