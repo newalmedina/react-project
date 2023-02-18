@@ -1,23 +1,18 @@
 
 import { ScrollView, Text, TouchableNativeFeedback, View } from "react-native"
+import BestSeller from "./BestSeller";
+import Jumbotron from "./Jumbotron";
+import Novedades from "./Novedades";
 
 const Home = ({ navigation }) => {
     return (
-        <View style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
-            <View>
-                <Text>Home</Text>
-                <TouchableNativeFeedback
-                    onPress={() => navigation.navigate('Cart')}
-                >
-                    <Text>Cart</Text>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback
-                    onPress={() => navigation.navigate('User')}
-                >
-                    <Text>User</Text>
-                </TouchableNativeFeedback>
+        <ScrollView >
+            <Jumbotron />
+            <View className="py-6 px-6">
+                <Novedades />
+                <BestSeller />
             </View>
-        </View >
+        </ScrollView >
     );
 }
 
