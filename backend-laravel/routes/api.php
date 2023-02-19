@@ -43,7 +43,6 @@ Route::group([
         Route::get('user', [AuthController::class, 'user']);
         Route::get('logout', [AuthController::class, 'logout']);
     });
-
 });
 
 Route::group([
@@ -76,11 +75,7 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'app'
+    'prefix' => 'v1'
 ], function () {
     Route::get('products/get-last-products', [ProductControlller::class, 'lastProducts']);
-
-
-
 });
-

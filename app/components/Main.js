@@ -1,24 +1,20 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import Navigation from "./navigation/Navigation";
+import ApiManager from "./Api/ApiManager";
 const Main = () => {
-  const apiUrl = "http://react-project.test/api/";
+  const apiUrl = "react-project.test/api/v1";
 
   useEffect(() => {
-    const config = {
-      headers: {
-        //Authorization: `${token}`,
-        Accept: "application/json",
-      },
-    };
-    axios
-      .get(apiUrl + "/app/products/get-last-products", config)
-      .then((response) => {
+
+    ApiManager.get(apiUrl + '/products/get-last-products')
+      .then(response => {
         console.log(response.data);
       })
-      .catch((error) => {
+      .catch(error => {
+        console.info(error)
         console.log(error);
-        return false;
+        throw error;
       });
   }, []);
   return (
