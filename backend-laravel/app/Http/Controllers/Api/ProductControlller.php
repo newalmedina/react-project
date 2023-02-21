@@ -58,7 +58,7 @@ class ProductControlller extends Controller
 
         $myServiceSPW = new StoragePathWork("products");
         $data = [];
-        $products= Product::active()->orderby("created_at","desc")->limit(3)->get();
+        $products = Product::active()->orderby("created_at", "desc")->limit(3)->get();
         foreach ($products as $product) {
             $imageList = [];
             foreach ($product->images as $image) {
@@ -66,10 +66,15 @@ class ProductControlller extends Controller
                 if (App::environment('local')) {
                     $file = "http://127.0.0.1:8887/products/" . $image->name;
                 }
-                $imageList[] = [
+
+                if ($_ENV['ngrok']) {
+                    $file = $_ENV['ngrok_http_image'] . "products/" . $image->name;
+                }
+                $imageList = [
                     "id" => $image->id,
                     "name" => $file
                 ];
+                break;
             }
             $data[] = [
                 "id" => $product->id,

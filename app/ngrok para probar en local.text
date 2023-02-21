@@ -1,0 +1,4 @@
+configurar tocken 1 sola vez
+ngrok config add-authtoken 2M3Ye5LYQue4MoPMW2QDjP6nWjC_6tQyW3A4iki8CybXFJJv9
+arrancar
+ngrok http 127.0.0.1
