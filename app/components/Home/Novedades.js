@@ -8,18 +8,10 @@ const Novedades = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const config = {
-            headers:
-            {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
-            }
-        }
 
-        ApiManager.get('products/get-last-products', config)
+        ApiManager.get('v1/products/get-last-products')
             .then(response => {
                 setData(response.data);
-                console.log(response.data);
             })
             .catch(error => {
                 console.info(error)
