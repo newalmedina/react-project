@@ -106,8 +106,8 @@ const ProductImages = ({ product, getProduct }) => {
                 {
                     imageList.map((image) =>
                         <div className="col-sm-4 text-center" key={image.id}>
-                            <button onClick={() => deleteImage(image.id)} className="btn btn-danger btn-xs mb-2" color="error"><i className="fas fa-trash" aria-hidden="true"></i></button>
-                            <img src={image.name} className="img-thumbnail" alt={image.name} style={{ width: "100%", minHeigth: "300px" }} />
+                            <button onClick={() => deleteImage(image.id)} className="btn btn-danger btn-xs mb-2 " color="error"><i className="fas fa-trash" aria-hidden="true"></i></button>
+                            <img src={image.name} className="img-thumbnail img-fluid" alt={image.name} style={{ height: "200px" }} />
                         </div>
                     )
                 }

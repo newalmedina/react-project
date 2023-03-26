@@ -25,12 +25,13 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 
+
 Route::group([
     'prefix' => 'auth'
 ], function () {
     Route::get('get-forget-password-token/{user_id}/{token}', [AuthController::class, 'getForgetPasswordToken']);
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('user/exist', [AuthController::class, 'emailExist']);
     Route::post('signup', [AuthController::class, 'signUp']);
     Route::post('forget-password', [AuthController::class, 'forgetPassword']);
     Route::post('restore-password', [AuthController::class, 'restorePassword']);
@@ -43,6 +44,7 @@ Route::group([
         Route::get('logout', [AuthController::class, 'logout']);
     });
 });
+
 Route::group([
     'middleware' => 'auth:sanctum'
 ], function () {
@@ -70,4 +72,10 @@ Route::group([
     Route::post('products/store-image/{id}', [ProductControlller::class, 'storeImage']);
     Route::delete('products/delete-image/{id}', [ProductControlller::class, 'deleteImage']);
     Route::apiResource('products', ProductControlller::class);
+});
+
+Route::group([
+    'prefix' => 'v1'
+], function () {
+    Route::get('products/get-last-products', [ProductControlller::class, 'lastProducts']);
 });
