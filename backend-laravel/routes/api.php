@@ -31,7 +31,7 @@ Route::group([
 ], function () {
     Route::get('get-forget-password-token/{user_id}/{token}', [AuthController::class, 'getForgetPasswordToken']);
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('user/exist', [AuthController::class, 'emailExist']);
     Route::post('signup', [AuthController::class, 'signUp']);
     Route::post('forget-password', [AuthController::class, 'forgetPassword']);
     Route::post('restore-password', [AuthController::class, 'restorePassword']);

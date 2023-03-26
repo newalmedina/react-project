@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const ngrok = 'https://09de-139-47-113-225.eu.ngrok.io/'
+const ngrok = 'https://205e-139-47-116-197.eu.ngrok.io/'
 
 const ApiManager = axios.create({
     baseURL: ngrok + "react-project/backend-laravel/public/api/",

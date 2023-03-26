@@ -33,7 +33,8 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|confirmed|min:6|string'
         ]);
-        if ($validator->fails()) {
+
+        if (!$validator->fails()) {
             return response()->json([
                 'message' => 'validation error'
             ], 422);
@@ -53,7 +54,7 @@ class AuthController extends Controller
 
             $userProfile->first_name = $request->first_name;
             $userProfile->last_name = $request->last_name;
-            $userProfile->gender = 'male';
+            $userProfile->gender = $request->gender ?? "male";
             $userProfile->user_lang = 'es';
 
             $user->userProfile()->save($userProfile);
@@ -161,6 +162,13 @@ class AuthController extends Controller
             ]
 
         );
+    }
+
+    //email exist 
+    public function emailExist(Request $request)
+    {
+        $user = User::where("email", $request->email)->first();
+        return !empty($user->id) ? 1 : 0;
     }
 
 
